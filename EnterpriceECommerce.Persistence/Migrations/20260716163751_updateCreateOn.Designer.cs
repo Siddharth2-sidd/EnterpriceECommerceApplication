@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriceECommerce.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260715180103_SeedRoles")]
-    partial class SeedRoles
+    [Migration("20260716163751_updateCreateOn")]
+    partial class updateCreateOn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,19 +55,19 @@ namespace EnterpriceECommerce.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2026, 7, 16, 22, 7, 51, 643, DateTimeKind.Local).AddTicks(1373),
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2026, 7, 16, 22, 7, 51, 643, DateTimeKind.Local).AddTicks(1384),
                             Name = "Seller"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedOn = new DateTime(2026, 7, 16, 22, 7, 51, 643, DateTimeKind.Local).AddTicks(1384),
                             Name = "Customer"
                         });
                 });
