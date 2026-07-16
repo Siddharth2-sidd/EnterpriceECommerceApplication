@@ -12,6 +12,7 @@ namespace EnterpriceECommerce.Persistence.Configurations
             builder.HasKey(r => r.Id);
             builder.Property(r => r.Name).IsRequired().HasMaxLength(50);
             builder.HasIndex(r => r.Name).IsUnique();
+            builder.HasData(new Role { Id = 1, Name = "Admin" }, new Role { Id = 2, Name = "Seller" }, new Role { Id = 3, Name = "Customer" });
         }
 
     }
