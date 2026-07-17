@@ -3,6 +3,9 @@ using EnterpriceECommerce.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using EnterpriceECommerce.Persistence.Repositories.Implementations;
+using EnterpriceECommerce.Persistence.Repositories.Interfaces;
+
 
 namespace EnterpriceECommerce.Persistence
 {
@@ -13,6 +16,7 @@ namespace EnterpriceECommerce.Persistence
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUserRepository, UserRepository>();  
             return services;
         }
 
