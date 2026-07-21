@@ -1,4 +1,6 @@
+using EnterpriceECommerce.Domain.Comman;
 using EnterpriceECommerce.Persistence;
+using EnterpriseECommerce.Infrastructure;
 namespace EnterpriceECommerce.Api
 {
     public class Program
@@ -14,7 +16,7 @@ namespace EnterpriceECommerce.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddPersistence(builder.Configuration);
-
+            builder.Services.Configure<JWTToken>(builder.Configuration.GetSection("JwtSettings"));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

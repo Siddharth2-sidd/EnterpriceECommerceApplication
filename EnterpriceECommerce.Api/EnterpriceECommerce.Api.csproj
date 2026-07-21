@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="FluentValidation" Version="8.6.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.28" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EnterpriceECommerce.Application\EnterpriceECommerce.Application.csproj" />
     <ProjectReference Include="..\EnterpriceECommerce.Persistence\EnterpriceECommerce.Persistence.csproj" />
-    <ProjectReference Include="..\EnterpriseECommerce.Infrastructure\EnterpriseECommerce.Infrastructure.csproj" />
+    <ProjectReference Include="..\EnterpriseECommerce.Infrastructure\EnterpriceECommerce.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

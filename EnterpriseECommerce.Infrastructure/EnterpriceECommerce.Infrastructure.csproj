@@ -12,9 +12,14 @@
 
   <ItemGroup>
     <Folder Include="Email\" />
-    <Folder Include="Identity\" />
     <Folder Include="Storage\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="jose-jwt" Version="5.3.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
 </Project>

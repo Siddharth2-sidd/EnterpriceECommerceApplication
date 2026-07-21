@@ -22,7 +22,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
             return await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<bool> ExistByEmailAsync(string email) {
+        public async Task<bool> ExitByEmailAsync(string email) {
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
@@ -30,7 +30,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
              await _context.Users.AddAsync(user);
         }
 
-        public async Task SaveChangeAsync() {
+        public async Task SaveChangesAsync() {
             await _context.SaveChangesAsync();
         }
     }

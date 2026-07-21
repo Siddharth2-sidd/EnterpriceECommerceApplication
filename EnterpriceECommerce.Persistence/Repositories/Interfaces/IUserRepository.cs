@@ -10,7 +10,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<User> GetByEmailAsync(string email);
-        Task<bool> ExitByEmail(string email);
+        Task<bool> ExitByEmailAsync(string email);
         Task AddUserAsync(User user);
         Task SaveChangesAsync();
 

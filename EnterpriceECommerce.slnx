@@ -3,5 +3,5 @@
   <Project Path="EnterpriceECommerce.Application/EnterpriceECommerce.Application.csproj" />
   <Project Path="EnterpriceECommerce.Domain/EnterpriceECommerce.Domain.csproj" />
   <Project Path="EnterpriceECommerce.Persistence/EnterpriceECommerce.Persistence.csproj" />
-  <Project Path="EnterpriseECommerce.Infrastructure/EnterpriseECommerce.Infrastructure.csproj" />
+  <Project Path="EnterpriseECommerce.Infrastructure/EnterpriceECommerce.Infrastructure.csproj" />
 </Solution>
