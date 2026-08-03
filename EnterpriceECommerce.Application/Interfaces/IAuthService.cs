@@ -10,6 +10,8 @@ namespace EnterpriceECommerce.Application.Interfaces
         Task ForgetPasswordAsync(ForgetPasswordRequestDTO request);
         Task ResetPasswordAsync(ResetPasswordRequestDTO resetRequest);
         Task ChangePasswordAsync (int userId, ChangePasswordRequestDTO request);
+        Task EmailVerificationAsync(EmailVerificationRequestDTO request);
+        Task ResendEmailVerificationAsync(string email);
 
     }
 }

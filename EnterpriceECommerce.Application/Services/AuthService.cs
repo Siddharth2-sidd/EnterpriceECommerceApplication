@@ -16,15 +16,19 @@ namespace EnterpriceECommerce.Application.Services
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IResetPasswordRepository _resetPasswordRepository;
         private readonly IEmailServices _emailServices;
+        private readonly IEmailVerificationRepository _emailVerificationRepository;
+
 
         public AuthService(IUserRepository userRepository,IJwtTokenGenrator jwtTokenGenrator, 
             IRefreshTokenGenerator refreshTokenGenerator, IRefreshTokenRepository refreshTokenRepository, 
-            IResetPasswordRepository resetPasswordRepository, IEmailServices emailServices)
+            IResetPasswordRepository resetPasswordRepository, IEmailServices emailServices, 
+            IEmailVerificationRepository emailVerificationRepository)
         {
             _userRepository = userRepository;
             _jwtTokenGenrator = jwtTokenGenrator;
             _refreshTokenGenerator = refreshTokenGenerator;
             _refreshTokenRepository = refreshTokenRepository;
+            _emailVerificationRepository = emailVerificationRepository;
             _resetPasswordRepository = resetPasswordRepository;
             _emailServices = emailServices;
             _passwordHasher = new PasswordHasher<User>();
@@ -54,6 +58,18 @@ namespace EnterpriceECommerce.Application.Services
             user.PasswordHashed = _passwordHasher.HashPassword(user, request.Password);
             await _userRepository.AddUserAsync(user);
             await _userRepository.SaveChangesAsync();
+            var verificationToken = Guid.NewGuid().ToString();
+            await _emailVerificationRepository.AddAsync(
+                new EmailVerificationToken
+                {
+                    Token = verificationToken,
+                    UserId = user.Id,
+                    ExpiryDate = DateTime.UtcNow.AddHours(24)
+                });
+            await _emailVerificationRepository.SaveChangeAsync();
+            await _emailServices.SendEmailAsync(user.Email, "Verification Email", $"Verification Token: {verificationToken}");
+            
+            
         }
 
         public async Task<AuthResponceDTO> LoginAsync(LoginRequestDTO login)
@@ -63,6 +79,9 @@ namespace EnterpriceECommerce.Application.Services
             if(user == null) {
                 throw new Exception("Invalid Email or Password");
             }
+            if (!user.IsEmailVerified)
+                throw new Exception("Please verify your email before logging in.");
+
             var result = _passwordHasher.VerifyHashedPassword(user,user.PasswordHashed, login.Password);
             if (result == PasswordVerificationResult.Failed) {
                 throw new Exception("Invalid Email or Password");
@@ -183,5 +202,44 @@ namespace EnterpriceECommerce.Application.Services
             await _userRepository.UpdateAsync(user);
             await _userRepository.SaveChangesAsync();
         }
+
+        public async Task EmailVerificationAsync(EmailVerificationRequestDTO request) {
+            var token = await _emailVerificationRepository.GetByTokenAsync(request.Token);
+            if (token == null)
+                throw new Exception("Invalid verification token.");
+
+            if (token.IsUsed)
+                throw new Exception("Verification token already used.");
+
+            if (token.ExpiryDate < DateTime.UtcNow)
+                throw new Exception("Verification token expired.");
+
+            token.User.IsEmailVerified = true;
+
+            token.IsUsed = true;
+            await _emailVerificationRepository.UpdateAsync(token);
+            await _emailVerificationRepository.SaveChangeAsync();
+        }
+        public async Task ResendEmailVerificationAsync(string email)
+        {
+            var user = await _userRepository.GetByEmailAsync(email);
+            if (user == null)
+                throw new Exception("Email is Invalid");
+            if (user.IsEmailVerified)
+                throw new Exception("Email already verified");
+            var token = Guid.NewGuid().ToString();
+            await _emailVerificationRepository.AddAsync(
+                new EmailVerificationToken
+                {
+                    Token = token,
+                    UserId = user.Id,
+                    ExpiryDate = DateTime.UtcNow.AddHours(24)
+                });
+            await _emailVerificationRepository.SaveChangeAsync();
+            await _emailServices.SendEmailAsync(user.Email, "Verify Email", $"Verification Token:{token}");
+        }
     }
 }
+
+
+

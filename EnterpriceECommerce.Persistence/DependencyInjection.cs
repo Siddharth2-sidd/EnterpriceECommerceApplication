@@ -14,12 +14,11 @@ namespace EnterpriceECommerce.Persistence
         public static IServiceCollection AddPersistence(
             this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(options =>options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IResetPasswordRepository, ResetPasswordRepository>();
-            
+            services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
             return services;
         }
     }

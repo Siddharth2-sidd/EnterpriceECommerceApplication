@@ -49,5 +49,17 @@ namespace EnterpriceECommerce.Api.Controllers
             await _authservices.ChangePasswordAsync(userId, request);
             return Ok(new { message = "Password changed Successfully" });
         }
+        [HttpPost("verify-email")]
+        public async Task<IActionResult> VerifyEmail(EmailVerificationRequestDTO request)
+        {
+            await _authservices.EmailVerificationAsync(request);
+            return Ok(new{message="Email Verify Successfully"});
+        }
+        [HttpPost("resend-verification")]
+        public async Task<IActionResult> ResendVerifivationEmail(string email)
+        {
+            await _authservices.ResendEmailVerificationAsync(email);
+            return Ok(new{message= "Verification email sent successfully." });
+        }
     }
 }
