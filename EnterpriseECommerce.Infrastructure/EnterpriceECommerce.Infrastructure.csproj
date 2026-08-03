@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Email\" />
     <Folder Include="Storage\" />
     <Folder Include="Services\" />
   </ItemGroup>

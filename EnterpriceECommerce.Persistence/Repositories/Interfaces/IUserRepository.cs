@@ -12,6 +12,8 @@ namespace EnterpriceECommerce.Persistence.Repositories.Interfaces
         Task<User> GetByEmailAsync(string email);
         Task<bool> ExitByEmailAsync(string email);
         Task AddUserAsync(User user);
+        Task <User> GetByIdAsync(int id);
+        Task UpdateAsync(User user);
         Task SaveChangesAsync();
 
     }

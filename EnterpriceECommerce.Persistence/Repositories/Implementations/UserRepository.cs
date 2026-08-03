@@ -30,6 +30,14 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
              await _context.Users.AddAsync(user);
         }
 
+        public async Task<User?> GetByIdAsync(int id) {
+            return await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task UpdateAsync(User user) {
+            _context.Users.Update(user);
+        }
+
         public async Task SaveChangesAsync() {
             await _context.SaveChangesAsync();
         }

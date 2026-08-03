@@ -12,13 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.6.3" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="8.6.3" />
+    <PackageReference Include="FluentValidator" Version="2.0.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.3.10" />
   </ItemGroup>

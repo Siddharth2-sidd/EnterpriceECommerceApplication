@@ -4,6 +4,7 @@ using EnterpriceECommerce.Domain.Entitites;
 using EnterpriceECommerce.Domain.Enums;
 using EnterpriceECommerce.Persistence.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Identity.Client;
 namespace EnterpriceECommerce.Application.Services
 {
     public class AuthService : IAuthService
@@ -11,11 +12,21 @@ namespace EnterpriceECommerce.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly IJwtTokenGenrator _jwtTokenGenrator;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IRefreshTokenGenerator _refreshTokenGenerator;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IResetPasswordRepository _resetPasswordRepository;
+        private readonly IEmailServices _emailServices;
 
-        public AuthService(IUserRepository userRepository,IJwtTokenGenrator jwtTokenGenrator)
+        public AuthService(IUserRepository userRepository,IJwtTokenGenrator jwtTokenGenrator, 
+            IRefreshTokenGenerator refreshTokenGenerator, IRefreshTokenRepository refreshTokenRepository, 
+            IResetPasswordRepository resetPasswordRepository, IEmailServices emailServices)
         {
             _userRepository = userRepository;
             _jwtTokenGenrator = jwtTokenGenrator;
+            _refreshTokenGenerator = refreshTokenGenerator;
+            _refreshTokenRepository = refreshTokenRepository;
+            _resetPasswordRepository = resetPasswordRepository;
+            _emailServices = emailServices;
             _passwordHasher = new PasswordHasher<User>();
         }
 
@@ -33,6 +44,7 @@ namespace EnterpriceECommerce.Application.Services
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
+                Email = request.Email,
                 PasswordHashed = string.Empty,
                 RoleId = (int)RoleEnum.Customer,
                 IsActive = true,
@@ -57,6 +69,15 @@ namespace EnterpriceECommerce.Application.Services
             }
 
             var token = _jwtTokenGenrator.GenerateToken(user);
+            var refreshToken = _refreshTokenGenerator.GenerateRefreshToken();
+            var token1 = new RefreshToken
+            {
+                Token = refreshToken,
+                ExpiryDate = DateTime.UtcNow.AddDays(7),
+                UserId = user.Id,
+            };
+            await _refreshTokenRepository.AddAsync(token1);
+            await _refreshTokenRepository.SaveChangesAsync();
 
             return new AuthResponceDTO
             {
@@ -64,8 +85,103 @@ namespace EnterpriceECommerce.Application.Services
                 FullName = $"{user.FirstName} {user.LastName}",
                 Role = user.Role.Name,
                 Email = user.Email,
-                Token = token
+                Token = token,
+                RefreshToken = refreshToken
+
             };
+        }
+        
+        public async Task<AuthResponceDTO> RefreshTokenAsync (RefreshTokenRequestDTO request)
+        {
+            var refreshToken = await _refreshTokenRepository.GetByTokenAsync(request.RefreshTokens);
+            if (refreshToken == null )
+            {
+                throw new Exception("Invalid token");
+            }
+            if (refreshToken.ExpiryDate < DateTime.UtcNow) {
+                throw new Exception("expired refresh token");
+            }
+            if (refreshToken.IsRevoked) {
+                throw new Exception("Refresh token has been revoked");
+            }
+            refreshToken.IsRevoked = true;
+            
+            var jwtToken = _jwtTokenGenrator.GenerateToken(refreshToken.User);
+            var newRefreshTokenGenerate = _refreshTokenGenerator.GenerateRefreshToken();
+            // Update the existing refresh token
+            var newrefreshToken = new RefreshToken
+            {
+                Token = newRefreshTokenGenerate,
+                UserId = refreshToken.UserId,
+                ExpiryDate = DateTime.UtcNow.AddDays(7)
+            };
+            
+            await _refreshTokenRepository.AddAsync(newrefreshToken);
+            await _refreshTokenRepository.SaveChangesAsync();
+            return new AuthResponceDTO
+            {
+                UserId = refreshToken.User.Id,
+                FullName = $"{refreshToken.User.FirstName} {refreshToken.User.LastName}",
+                Role = refreshToken.User.Role.Name,
+                Email = refreshToken.User.Email,
+                Token = jwtToken,
+                RefreshToken = newRefreshTokenGenerate
+            };
+        }
+
+        public async Task ForgetPasswordAsync(ForgetPasswordRequestDTO request) {
+            var user = await _userRepository.GetByEmailAsync(request.Email);
+            if(user == null)
+                throw new Exception("User not found");
+            var token = Guid.NewGuid().ToString();
+            var resetToken = new PasswordResetToken
+            {
+                Token = token,
+                UserId = user.Id,
+                ExpiryDate = DateTime.UtcNow.AddMinutes(30)
+            };
+            await _resetPasswordRepository.AddAsync(resetToken);
+            await _resetPasswordRepository.SaveChangesAsync();
+
+            var body = $"your password reset token {token}";
+            await _emailServices.SendEmailAsync(user.Email, "Password Reset", body);
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordRequestDTO request) 
+        {
+            if (request.NewPassword != request.ConfirmPassword) {
+                throw new Exception("Password do not match");
+            }
+            var resetToken = await _resetPasswordRepository.GetByTokenAsync(request.Token);
+
+            if (resetToken == null) {
+                throw new Exception("ResetToken is invalid");
+            }
+            if (resetToken.IsUsed)
+                throw new Exception("ResetToken AlreadyUsed");
+            if (resetToken.ExpiryDate < DateTime.UtcNow)
+                throw new Exception("ResetToken Expired");
+
+            var user = resetToken.User;
+            user.PasswordHashed = _passwordHasher.HashPassword(user, request.NewPassword);
+            resetToken.IsUsed = true;
+            await _resetPasswordRepository.UpdateAsync(resetToken);
+            await _resetPasswordRepository.SaveChangesAsync();
+        }
+
+        public async Task ChangePasswordAsync(int userId, ChangePasswordRequestDTO request) {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                throw new Exception("User not found");
+            if (request.NewPassword != request.ConfirmNewPassword)
+                throw new Exception("Password Mismatch");
+            var verifyResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHashed, request.CurrentPassword);
+
+            if (verifyResult == PasswordVerificationResult.Failed)
+                throw new Exception("Current Password is Incorrect");
+            user.PasswordHashed = _passwordHasher.HashPassword(user, request.NewPassword);
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveChangesAsync();
         }
     }
 }

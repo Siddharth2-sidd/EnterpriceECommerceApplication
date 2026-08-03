@@ -4,6 +4,7 @@ using EnterpriceECommerce.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriceECommerce.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260730201131_AddRefreshToken")]
+    partial class AddRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,42 +24,6 @@ namespace EnterpriceECommerce.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.PasswordResetToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsUsed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PasswordResetTokens", (string)null);
-                });
 
             modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.RefreshToken", b =>
                 {
@@ -122,19 +89,19 @@ namespace EnterpriceECommerce.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2026, 8, 2, 22, 21, 12, 582, DateTimeKind.Local).AddTicks(5830),
+                            CreatedOn = new DateTime(2026, 7, 31, 1, 41, 30, 822, DateTimeKind.Local).AddTicks(2454),
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2026, 8, 2, 22, 21, 12, 582, DateTimeKind.Local).AddTicks(5846),
+                            CreatedOn = new DateTime(2026, 7, 31, 1, 41, 30, 822, DateTimeKind.Local).AddTicks(2471),
                             Name = "Seller"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2026, 8, 2, 22, 21, 12, 582, DateTimeKind.Local).AddTicks(5849),
+                            CreatedOn = new DateTime(2026, 7, 31, 1, 41, 30, 822, DateTimeKind.Local).AddTicks(2473),
                             Name = "Customer"
                         });
                 });
@@ -192,17 +159,6 @@ namespace EnterpriceECommerce.Persistence.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.PasswordResetToken", b =>
-                {
-                    b.HasOne("EnterpriceECommerce.Domain.Entitites.User", "User")
-                        .WithMany("PasswordResetTokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.RefreshToken", b =>
                 {
                     b.HasOne("EnterpriceECommerce.Domain.Entitites.User", "User")
@@ -232,8 +188,6 @@ namespace EnterpriceECommerce.Persistence.Migrations
 
             modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.User", b =>
                 {
-                    b.Navigation("PasswordResetTokens");
-
                     b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618

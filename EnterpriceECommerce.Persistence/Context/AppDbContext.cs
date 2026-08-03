@@ -16,6 +16,8 @@ namespace EnterpriceECommerce.Persistence.Context
         }
         public DbSet<User> Users => Set<User>();
         public DbSet<Role> Roles => Set<Role>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

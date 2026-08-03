@@ -1,9 +1,4 @@
 ﻿using EnterpriceECommerce.Application.DTOs.Auth;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EnterpriceECommerce.Application.Interfaces
 {
@@ -11,6 +6,10 @@ namespace EnterpriceECommerce.Application.Interfaces
     {
         Task RegisterAsync(RegisterRequestDTO request);
         Task<AuthResponceDTO> LoginAsync(LoginRequestDTO login);
+        Task<AuthResponceDTO> RefreshTokenAsync(RefreshTokenRequestDTO request);
+        Task ForgetPasswordAsync(ForgetPasswordRequestDTO request);
+        Task ResetPasswordAsync(ResetPasswordRequestDTO resetRequest);
+        Task ChangePasswordAsync (int userId, ChangePasswordRequestDTO request);
 
     }
 }

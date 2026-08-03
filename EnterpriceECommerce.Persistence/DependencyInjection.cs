@@ -16,9 +16,11 @@ namespace EnterpriceECommerce.Persistence
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IUserRepository, UserRepository>();  
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IResetPasswordRepository, ResetPasswordRepository>();
+            
             return services;
         }
-
     }
 }

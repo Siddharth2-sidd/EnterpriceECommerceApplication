@@ -1,13 +1,17 @@
 ﻿using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Application.Services;
+using EnterpriceECommerce.Application.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace EnterpriceECommerce.Application
 {
-    public class DependencyInjection
+    public static class DependencyInjection
     {
-        public IServiceCollection AddApplication(IServiceCollection services) {
+        public static IServiceCollection AddApplication(this IServiceCollection services) {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
             return services;
         }
     }
