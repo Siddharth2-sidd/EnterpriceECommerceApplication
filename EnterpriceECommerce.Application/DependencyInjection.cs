@@ -17,6 +17,7 @@ namespace EnterpriceECommerce.Application
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<IProductServices, ProductService>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
             services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
             services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();

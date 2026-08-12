@@ -21,7 +21,10 @@ namespace EnterpriceECommerce.Application.Mappings
                 opt => opt.MapFrom(src => src.Category.Name))
             .ForMember(
                 dest => dest.BrandName,
-                opt => opt.MapFrom(src => src.Brand.Name));
+                opt => opt.MapFrom(src => src.Brand.Name))
+            .ForMember(
+                 dest => dest.Images,
+                 opt => opt.MapFrom(src => src.ProductImages));
         }
     }
 }

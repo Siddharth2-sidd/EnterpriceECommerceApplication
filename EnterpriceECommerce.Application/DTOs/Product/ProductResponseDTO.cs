@@ -33,5 +33,6 @@ namespace EnterpriceECommerce.Application.DTOs.Product
         public int BrandId { get; set; }
 
         public string BrandName { get; set; } = string.Empty;
+        public List<ProductImagesResponseDTO> Images { get; set; } = new List<ProductImagesResponseDTO>();
     }
 }

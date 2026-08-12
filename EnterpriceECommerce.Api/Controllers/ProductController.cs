@@ -12,10 +12,12 @@ namespace EnterpriceECommerce.API.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly IProductServices _service;
+    private readonly IProductImageService _imageService;
 
-    public ProductController(IProductServices service)
+    public ProductController(IProductServices service, IProductImageService imageService)
     {
         _service = service;
+        _imageService = imageService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -72,6 +74,30 @@ public class ProductController : ControllerBase
         return Ok(new
         {
             Message = "Product deleted successfully."
+        });
+    }
+    [Authorize(Roles = "Admin")]
+    [HttpPost("images")]
+    public async Task<IActionResult> AddImages(
+    [FromForm] AddProductImagesRequestDTO request)
+    {
+        await _imageService.AddAsync(request);
+
+        return Ok(new
+        {
+            Message = "Product images uploaded successfully."
+        });
+    }
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("images/{imageId}")]
+    public async Task<IActionResult> DeleteImage(
+    int imageId)
+    {
+        await _imageService.DeleteAsync(imageId);
+
+        return Ok(new
+        {
+            Message = "Product image deleted successfully."
         });
     }
 }
