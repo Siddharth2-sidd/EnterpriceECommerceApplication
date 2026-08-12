@@ -19,45 +19,45 @@ namespace EnterpriceECommerce.Application.Services
             _brandRepository = brandRepository;
             _mapper = mapper;
         }
-        public async Task CreateAsync(CreateCategoryRequestDTOs create) 
+        public async Task CreateAsync(CreateBrandRequestDTO create) 
         {
-            if(await _brandRepository.ExistAsync(create.Name))
+            if(await _brandRepository.ExistsAsync(create.Name))
             {
                 throw new Exception("Brand already Exits");
             }
             var brand = _mapper.Map<Brand>(create);
             await _brandRepository.AddAsync(brand);
-            await _brandRepository.SaveChangeAsync();
+            await _brandRepository.SaveChangesAsync();
         }
         public async Task<List<BrandResponseDTO>> GetAllAsync(FilterDTO filter) {
             var brand = await _brandRepository.GetAllAsync(filter);
             return _mapper.Map<List<BrandResponseDTO>>(brand);
         }
         public async Task<BrandResponseDTO> GetByIdAsync(int id) {
-            var brand = await _brandRepository.GetByIdAdync(id);
+            var brand = await _brandRepository.GetByIdAsync(id);
             return _mapper.Map<BrandResponseDTO>(brand);
         }
         public async Task UpdateAsync(UpdateBrandRequestDTO request)
         {
-            var brand = await _brandRepository.GetByIdAdync(request.Id);
+            var brand = await _brandRepository.GetByIdAsync(request.Id);
             if(brand == null)
             {
                 throw new Exception("Brand not Found");
             }
             _mapper.Map<UpdateBrandRequestDTO>(brand);
             await _brandRepository.UpdateAsync(brand);
-            await _brandRepository.SaveChangeAsync();
+            await _brandRepository.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id) 
         {
-            var brand = await _brandRepository.GetByIdAdync(id);
+            var brand = await _brandRepository.GetByIdAsync(id);
             if (brand == null)
             {
                 throw new Exception("Brand not Found");
             }
             brand.IsDeleted = true;
             await _brandRepository.UpdateAsync(brand);
-            await _brandRepository.SaveChangeAsync();
+            await _brandRepository.SaveChangesAsync();
 
         }
     }

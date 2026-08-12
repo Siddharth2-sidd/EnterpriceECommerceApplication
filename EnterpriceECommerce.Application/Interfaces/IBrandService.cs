@@ -6,7 +6,7 @@ namespace EnterpriceECommerce.Application.Interfaces
 {
     public interface IBrandService
     {
-        Task CreateAsync(CreateCategoryRequestDTOs create);
+        Task CreateAsync(CreateBrandRequestDTO create);
         Task<List<BrandResponseDTO>> GetAllAsync(FilterDTO filter);
         Task<BrandResponseDTO> GetByIdAsync(int id);
         Task UpdateAsync(UpdateBrandRequestDTO request);
