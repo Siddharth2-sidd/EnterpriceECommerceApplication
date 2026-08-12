@@ -5,6 +5,8 @@ namespace EnterpriceECommerce.Application.Interfaces
     public interface IAuthService
     {
         Task RegisterAsync(RegisterRequestDTO request);
+        Task AdminRegisterAsync(RegisterRequestDTO request);
+        Task SellerRegisterAsync(RegisterRequestDTO request);
         Task<AuthResponceDTO> LoginAsync(LoginRequestDTO login);
         Task<AuthResponceDTO> RefreshTokenAsync(RefreshTokenRequestDTO request);
         Task ForgetPasswordAsync(ForgetPasswordRequestDTO request);

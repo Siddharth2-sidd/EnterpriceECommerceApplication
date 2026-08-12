@@ -21,6 +21,21 @@ namespace EnterpriceECommerce.Api.Controllers
             await _authservices.RegisterAsync(request);
             return Ok(new { message = "Successfully Register" });
         }
+        [Authorize(Roles ="Admin")]
+        [HttpPost("AdminRegister")]
+        public async Task<IActionResult> AdminRegister(RegisterRequestDTO request) 
+        {
+            await _authservices.AdminRegisterAsync(request);
+            return Ok(new { message = "Admin Successfully Register" });
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpPost("SellerRegister")]
+        public async Task<IActionResult> SellerRegister(RegisterRequestDTO request)
+        {
+            await _authservices.SellerRegisterAsync(request);
+            return Ok(new { message = "Seller Successfully Register" });
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequestDTO request) {
             var result = await _authservices.LoginAsync(request);

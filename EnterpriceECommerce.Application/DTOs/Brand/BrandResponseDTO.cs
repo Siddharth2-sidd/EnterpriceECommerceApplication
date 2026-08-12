@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EnterpriceECommerce.Application.DTOs.Brand
+{
+    public class BrandResponseDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string .Empty;
+        public bool IsActive { get; set; }
+
+    }
+}

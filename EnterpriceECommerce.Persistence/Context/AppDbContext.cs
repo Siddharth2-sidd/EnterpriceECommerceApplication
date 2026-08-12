@@ -19,6 +19,11 @@ namespace EnterpriceECommerce.Persistence.Context
         public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
         public DbSet<PasswordResetToken> PasswordResetTokens => Set<PasswordResetToken>();
         public DbSet<EmailVerificationToken> EmailVerificationTokens => Set<EmailVerificationToken>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+        public DbSet<ProductSpecification> ProductSpecifications => Set<ProductSpecification>();
+        public DbSet<Brand> Brands => Set<Brand>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

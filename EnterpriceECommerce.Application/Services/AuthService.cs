@@ -36,6 +36,24 @@ namespace EnterpriceECommerce.Application.Services
 
         public async Task RegisterAsync(RegisterRequestDTO request)
         {
+            var userExits = await _userRepository.GetAllAsync();
+            if (userExits.Count == 0)
+            {
+                var adminUser = new User 
+                {
+                    FirstName = "Master",
+                    LastName = "Admin",
+                    Email = "MasterAdmin@gmail.com",
+                    PasswordHashed = string.Empty,
+                    RoleId = (int)RoleEnum.Admin,
+                    IsActive = true,
+                    CreatedOn = DateTime.UtcNow,
+                    IsEmailVerified = true
+                };
+                adminUser.PasswordHashed = _passwordHasher.HashPassword(adminUser, "MasterAdmin@12");
+                await _userRepository.AddUserAsync(adminUser);
+                await _userRepository.SaveChangesAsync();
+            }
             if (await _userRepository.ExitByEmailAsync(request.Email)){
                 throw new Exception("Email Already Exits");
             }
@@ -70,6 +88,71 @@ namespace EnterpriceECommerce.Application.Services
             await _emailServices.SendEmailAsync(user.Email, "Verification Email", $"Verification Token: {verificationToken}");
             
             
+        }
+        public async Task AdminRegisterAsync(RegisterRequestDTO adminRequest)
+        {
+            var emailExist = await _userRepository.ExitByEmailAsync(adminRequest.Email);
+            if (emailExist)
+                throw new Exception("Email Already Register");
+            if (adminRequest.Password != adminRequest.ConfirmPassword)
+                throw new Exception("Password not Match");
+            var adminUser = new User
+            {
+                FirstName = adminRequest.FirstName,
+                LastName = adminRequest.LastName,
+                Email = adminRequest.Email,
+                PasswordHashed = string.Empty,
+                RoleId = (int)RoleEnum.Admin,
+                IsActive = true,
+                CreatedOn = DateTime.UtcNow
+
+            };
+            adminUser.PasswordHashed = _passwordHasher.HashPassword(adminUser, adminRequest.Password);
+            await _userRepository.AddUserAsync(adminUser);
+            await _userRepository.SaveChangesAsync();
+            var verificationToken = Guid.NewGuid().ToString();
+            await _emailVerificationRepository.AddAsync(new EmailVerificationToken
+            {
+                Token = verificationToken,
+                UserId = adminUser.Id,
+                ExpiryDate = DateTime.UtcNow.AddMinutes(10)
+            });
+            await _emailVerificationRepository.SaveChangeAsync();
+            await _emailServices.SendEmailAsync(adminUser.Email, "Verification Email", $"Verification Token: {verificationToken}");
+        }
+
+        public async Task SellerRegisterAsync(RegisterRequestDTO sellerRequest) 
+        {
+            var email = _userRepository.ExitByEmailAsync(sellerRequest.Email);
+
+            if (email != null)
+                throw new Exception("Email Already Exits");
+            if (sellerRequest.Password != sellerRequest.ConfirmPassword)
+                throw new Exception("Password not match with ConfirmPassword");
+            var seller = new User 
+            { 
+                FirstName = sellerRequest.FirstName,
+                LastName = sellerRequest.LastName,
+                Email = sellerRequest.Email,
+                PasswordHashed = string.Empty,
+                IsActive = true,
+                CreatedOn = DateTime.UtcNow
+            };
+            seller.PasswordHashed = _passwordHasher.HashPassword(seller, sellerRequest.Password);
+            await _userRepository.AddUserAsync(seller);
+            await _userRepository.SaveChangesAsync();
+
+            var verificationToken = Guid.NewGuid().ToString();
+            var emailVerification = new EmailVerificationToken
+            {
+                Token = verificationToken,
+                ExpiryDate = DateTime.UtcNow.AddMinutes(10),
+                UserId = seller.Id
+            };
+            await _emailVerificationRepository.AddAsync(emailVerification);
+            await _emailVerificationRepository.SaveChangeAsync();
+            await _emailServices.SendEmailAsync(seller.Email, "Verification Email", $"Verification Token: {verificationToken}");
+
         }
 
         public async Task<AuthResponceDTO> LoginAsync(LoginRequestDTO login)
@@ -240,6 +323,3 @@ namespace EnterpriceECommerce.Application.Services
         }
     }
 }
-
-
-
