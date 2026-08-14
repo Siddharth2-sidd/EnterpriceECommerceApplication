@@ -22,8 +22,7 @@ public class ProductController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> Create(
-        CreateProductRequestDTO request)
+    public async Task<IActionResult> Create(CreateProductRequestDTO request)
     {
         await _service.CreateAsync(request);
 
@@ -34,8 +33,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(
-        [FromQuery] ProductFilterDTO filter)
+    public async Task<IActionResult> GetAll([FromQuery] ProductFilterDTO filter)
     {
         var products =
             await _service.GetAllAsync(filter);
@@ -54,8 +52,7 @@ public class ProductController : ControllerBase
 
     [Authorize(Roles = "Admin")]
     [HttpPut]
-    public async Task<IActionResult> Update(
-        UpdateProductRequestDTO request)
+    public async Task<IActionResult> Update(UpdateProductRequestDTO request)
     {
         await _service.UpdateAsync(request);
 
@@ -78,8 +75,7 @@ public class ProductController : ControllerBase
     }
     [Authorize(Roles = "Admin")]
     [HttpPost("images")]
-    public async Task<IActionResult> AddImages(
-    [FromForm] AddProductImagesRequestDTO request)
+    public async Task<IActionResult> AddImages([FromForm] AddProductImagesRequestDTO request)
     {
         await _imageService.AddAsync(request);
 
@@ -90,8 +86,7 @@ public class ProductController : ControllerBase
     }
     [Authorize(Roles = "Admin")]
     [HttpDelete("images/{imageId}")]
-    public async Task<IActionResult> DeleteImage(
-    int imageId)
+    public async Task<IActionResult> DeleteImage(int imageId)
     {
         await _imageService.DeleteAsync(imageId);
 

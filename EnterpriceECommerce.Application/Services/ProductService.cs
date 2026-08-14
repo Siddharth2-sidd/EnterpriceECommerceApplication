@@ -5,7 +5,6 @@ using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Domain.Comman;
 using EnterpriceECommerce.Domain.Entitites;
 using EnterpriceECommerce.Persistence.Repositories.Interfaces;
-using System.Reflection.Metadata.Ecma335;
 
 namespace EnterpriceECommerce.Application.Services
 {
@@ -64,11 +63,9 @@ namespace EnterpriceECommerce.Application.Services
             if (product == null)
                 throw new Exception("Product not found.");
 
-            if (product.SKU != request.SKU &&
-                await _productRepository.ExitsBySKUAsync(request.SKU))
+            if (product.SKU != request.SKU && await _productRepository.ExitsBySKUAsync(request.SKU))
             {
-                throw new Exception(
-                    "Product SKU already exists.");
+                throw new Exception("Product SKU already exists.");
             }
 
             if (!await _productRepository.CategoryExitsAsync(request.CategoryId))
@@ -80,7 +77,7 @@ namespace EnterpriceECommerce.Application.Services
             {
                 throw new Exception("Brand not found.");
             }
-            _mapper.Map<Product>(request);
+            _mapper.Map(request, product);
 
             await _productRepository.Update(product);
 

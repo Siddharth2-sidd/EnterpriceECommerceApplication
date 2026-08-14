@@ -13,10 +13,7 @@ namespace EnterpriceECommerce.Application.Services
         private readonly IProductRepository _productRepository;
         private readonly IBlobStorageService _blobStorage;
 
-        public ProductImageService(
-            IProductImagesRepository imageRepository,
-            IProductRepository productRepository,
-            IBlobStorageService blobStorage)
+        public ProductImageService(IProductImagesRepository imageRepository,IProductRepository productRepository,IBlobStorageService blobStorage)
         {
             _imageRepository = imageRepository;
             _productRepository = productRepository;
