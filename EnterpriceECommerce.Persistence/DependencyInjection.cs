@@ -23,6 +23,7 @@ namespace EnterpriceECommerce.Persistence
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
+            services.AddScoped<IProductSpecificationRepository,ProductSpecificationRepository>();
             return services;
         }
     }

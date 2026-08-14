@@ -15,7 +15,9 @@ namespace EnterpriceECommerce.Application.Mappings
         {
             CreateMap<CreateProductRequestDTO, Product>();
             CreateMap<UpdateProductRequestDTO, Product>();
+            CreateMap<ProductSpecification,ProductSpecificationResponseDto>();
             CreateMap<Product, ProductResponseDTO>()
+
             .ForMember(
                 dest => dest.CategoryName,
                 opt => opt.MapFrom(src => src.Category.Name))
@@ -24,7 +26,10 @@ namespace EnterpriceECommerce.Application.Mappings
                 opt => opt.MapFrom(src => src.Brand.Name))
             .ForMember(
                  dest => dest.Images,
-                 opt => opt.MapFrom(src => src.ProductImages));
+                 opt => opt.MapFrom(src => src.ProductImages))
+            .ForMember(      
+                dest => dest.Specifications,
+                opt => opt.MapFrom(src => src.ProductSpecifications));
         }
     }
 }
