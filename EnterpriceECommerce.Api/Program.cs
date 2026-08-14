@@ -57,6 +57,7 @@ namespace EnterpriceECommerce.Api
             builder.Services.AddPersistence(builder.Configuration);
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddApplication();
+            builder.Services.Configure<AzureBlobStorageSettings>(builder.Configuration.GetSection("AzureBlobStorage"));
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

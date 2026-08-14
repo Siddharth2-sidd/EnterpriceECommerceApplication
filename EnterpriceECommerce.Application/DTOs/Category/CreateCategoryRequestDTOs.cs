@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace EnterpriceECommerce.Application.DTOs.Category
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string ImageUrl { get; set; } = string.Empty;
+        public IFormFile? Image { get; set; } 
     }
 }

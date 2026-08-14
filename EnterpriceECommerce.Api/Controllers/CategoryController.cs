@@ -19,7 +19,7 @@ namespace EnterpriceECommerce.Api.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> AddCategoryAsync(CreateCategoryRequestDTOs request)
+        public async Task<IActionResult> AddCategoryAsync([FromForm] CreateCategoryRequestDTOs request)
         {
             await _categoryService.CreateAsync(request);
             return Ok(new
@@ -46,7 +46,7 @@ namespace EnterpriceECommerce.Api.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(UpdateCategoryRequestDTOs request) 
+        public async Task<IActionResult> UpdateAsync([FromForm] UpdateCategoryRequestDTOs request) 
         {
             await _categoryService.UpdateAsync(request);
             return Ok(new

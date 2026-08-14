@@ -27,9 +27,9 @@ namespace EnterpriceECommerce.Application
             services.AddValidatorsFromAssemblyContaining<CreateProductValidator>();
             services.AddValidatorsFromAssemblyContaining<UpdateProductValidator>();
 
-            services.AddAutoMapper(typeof(CategoryProfile));
-            services.AddAutoMapper(typeof(BrandProfile));
-            services.AddAutoMapper(typeof(ProductProfile));
+            services.AddAutoMapper(c=>{ },typeof(CategoryProfile).Assembly);
+            services.AddAutoMapper(c=>{ },typeof(BrandProfile).Assembly);
+            services.AddAutoMapper(c=>{ },typeof(ProductProfile).Assembly);
 
             return services;
         }

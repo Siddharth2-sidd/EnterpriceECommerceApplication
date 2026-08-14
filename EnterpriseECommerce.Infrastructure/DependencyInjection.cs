@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EnterpriceECommerce.Infrastructure.Identity;
 using EnterpriceECommerce.Infrastructure.Email;
+using EnterpriceECommerce.Infrastructure.Storage;
 
 namespace EnterpriceECommerce.Infrastructure
 {
@@ -17,6 +18,7 @@ namespace EnterpriceECommerce.Infrastructure
             services.AddScoped<IJwtTokenGenrator, JwtTokenGenerator>();
             services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
             services.AddScoped<IEmailServices, EmailServices>();
+            services.AddScoped<IBlobStorageService, BlobStorageService>();
 
             return services;
         }
