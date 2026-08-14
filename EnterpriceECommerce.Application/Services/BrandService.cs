@@ -44,7 +44,7 @@ namespace EnterpriceECommerce.Application.Services
             {
                 throw new Exception("Brand not Found");
             }
-            _mapper.Map<UpdateBrandRequestDTO>(brand);
+            _mapper.Map(request, brand);
             await _brandRepository.UpdateAsync(brand);
             await _brandRepository.SaveChangesAsync();
         }
