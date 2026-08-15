@@ -36,14 +36,14 @@ namespace EnterpriceECommerce.Application.Services
 
             await _productRepository.SaveChangesAsync();
         }
-        public async Task<ProductResponseDTO> GetAllAsync(ProductFilterDTO filter)
+        public async Task<List<ProductResponseDTO>> GetAllAsync(ProductFilterDTO filter)
         {
             var products = await _productRepository.GetAllAsync(filter);
             if(products == null)
             {
                 throw new Exception("Product Not Found");
             }
-             return _mapper.Map<ProductResponseDTO>(products);
+             return _mapper.Map<List<ProductResponseDTO>>(products);
             
         }
         public async Task<ProductResponseDTO> GetByIdAsync(int id)

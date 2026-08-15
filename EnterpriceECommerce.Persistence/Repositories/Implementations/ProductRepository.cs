@@ -22,7 +22,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
         }
         public async Task<List<Product>> GetAllAsync(ProductFilterDTO filter) 
         {
-            var query = _context.Products.Include(x => x.CategoryId).Include(x => x.Brand).Where(x => !x.IsDeleted);
+            var query = _context.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => !x.IsDeleted);
 
             //Search
             if (!string.IsNullOrWhiteSpace(filter.Search)) 
@@ -85,11 +85,11 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
         }
         public async Task<bool> CategoryExitsAsync(int categoryId)
         {
-            return await _context.Products.AnyAsync(x => x.CategoryId == categoryId && !x.IsDeleted);
+            return await _context.Categories.AnyAsync(x => x.Id == categoryId && !x.IsDeleted);
         }
         public async Task<bool> BrandExitsAsync(int brandId)
         {
-            return await _context.Products.AnyAsync(x => x.BrandId == brandId && !x.IsDeleted);
+            return await _context.Brands.AnyAsync(x => x.Id == brandId && !x.IsDeleted);
         }
         public Task Update(Product product) 
         {

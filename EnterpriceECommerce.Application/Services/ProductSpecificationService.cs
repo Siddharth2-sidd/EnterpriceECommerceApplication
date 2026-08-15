@@ -66,7 +66,8 @@ public class ProductSpecificationService : IProductSpecificationService
         if (specification == null)
             throw new Exception("Specification not found.");
 
-        _mapper.Map(request, specification);
+        specification.SpecificationKey = request.SpecificationKey;
+        specification.SpecificationValue = request.SpecificationValue;
 
         await _repository.UpdateAsync(specification);
 

@@ -8,8 +8,7 @@ namespace EnterpriceECommerce.Application.Interfaces
     {
         Task CreateAsync(CreateProductRequestDTO request);
 
-        Task<ProductResponseDTO> GetAllAsync(
-            ProductFilterDTO filter);
+        Task<List<ProductResponseDTO>> GetAllAsync(ProductFilterDTO filter);
 
         Task<ProductResponseDTO> GetByIdAsync(int id);
 
