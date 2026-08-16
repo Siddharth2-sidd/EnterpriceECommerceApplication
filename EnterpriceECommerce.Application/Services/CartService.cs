@@ -3,11 +3,6 @@ using EnterpriceECommerce.Application.DTOs.Cart;
 using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Domain.Entitites;
 using EnterpriceECommerce.Persistence.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EnterpriceECommerce.Application.Services
 {
@@ -25,7 +20,7 @@ namespace EnterpriceECommerce.Application.Services
         }
         public async Task<CartResponseDTO> GetCartAsync(int userId) 
         {
-            var cart = await _cartRepository.GetByIdAsync(userId);
+            var cart = await _cartRepository.GetByUserId(userId);
             
             if (cart == null)
             {
@@ -45,7 +40,7 @@ namespace EnterpriceECommerce.Application.Services
             var product = await _productRepository.GetByIdAsync(request.ProductId);
             if(product == null)
             {
-                throw new Exception("User not found");
+                throw new Exception("Product not found");
             }
             if (!product.IsActive)
             {
@@ -60,16 +55,18 @@ namespace EnterpriceECommerce.Application.Services
                 {
                     UserId = userId
                 };
+                await _cartRepository.AddAsync(cart);
+                await _cartRepository.SaveChangesAsync();
             }
-            await _cartRepository.AddAsync(cart);
-            await _cartRepository.SaveChangesAsync();
+            
             var exitingItem = await _cartRepository.GetCartItemAsync(cart.Id, product.Id);
             if(exitingItem != null)
             {
                 var newQuantity = exitingItem.Quantity + request.Quantity;
                 if (newQuantity > product.StockQuantity)
                     throw new Exception("Request Quantity Exceed Available Stock");
-                exitingItem.UpdatedOn = DateTime.UtcNow;
+                exitingItem.Quantity = newQuantity;
+                
             }
             else
             {
