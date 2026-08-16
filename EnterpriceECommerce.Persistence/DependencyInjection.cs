@@ -25,6 +25,7 @@ namespace EnterpriceECommerce.Persistence
             services.AddScoped<IProductImagesRepository, ProductImagesRepository>();
             services.AddScoped<IProductSpecificationRepository,ProductSpecificationRepository>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
             return services;
         }
     }

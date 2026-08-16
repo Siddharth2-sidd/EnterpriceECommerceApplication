@@ -25,6 +25,8 @@ namespace EnterpriceECommerce.Persistence.Context
         public DbSet<ProductSpecification> ProductSpecifications => Set<ProductSpecification>();
         public DbSet<Brand> Brands => Set<Brand>();
         public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
+        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartItem> CartItems => Set<CartItem>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

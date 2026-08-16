@@ -1,0 +1,24 @@
+﻿using EnterpriceECommerce.Domain.Comman;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EnterpriceECommerce.Domain.Entitites
+{
+    public class CartItem :BaseEntity
+    {
+        public int CartId { get; set; }
+
+        public Cart Cart { get; set; } = null!;
+
+        public int ProductId { get; set; }
+
+        public Product Product { get; set; } = null!;
+
+        public int Quantity { get; set; }
+
+        public decimal UnitPrice { get; set; }
+    }
+}
