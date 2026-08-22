@@ -29,5 +29,32 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Order>> GetAllAsync(string? status, string? paymentStatus, DateTime? fromDate, DateTime? toDate,
+                                                    int pageNumber,int pageSize)
+        {
+            var query = _context.Orders.Include(x => x.OrderItems).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                query = query.Where(x => x.OrderStatus == status);
+            }
+
+            if (!string.IsNullOrWhiteSpace(paymentStatus))
+            {
+                query = query.Where(x => x.PaymentStatus == paymentStatus);
+            }
+
+            if (fromDate.HasValue)
+            {
+                query = query.Where(x => x.CreatedOn >= fromDate.Value);
+            }
+
+            if (toDate.HasValue)
+            {
+                query = query.Where(x =>x.CreatedOn <= toDate.Value);
+            }
+
+            return await query.OrderByDescending(x => x.CreatedOn).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
     }
 }

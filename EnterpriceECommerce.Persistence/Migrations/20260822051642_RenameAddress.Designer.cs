@@ -4,6 +4,7 @@ using EnterpriceECommerce.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EnterpriceECommerce.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260822051642_RenameAddress")]
+    partial class RenameAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -594,47 +597,6 @@ namespace EnterpriceECommerce.Persistence.Migrations
                     b.ToTable("ProductImages", (string)null);
                 });
 
-            modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.ProductReview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("ProductId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("productReviews");
-                });
-
             modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.ProductSpecification", b =>
                 {
                     b.Property<int>("Id")
@@ -733,19 +695,19 @@ namespace EnterpriceECommerce.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedOn = new DateTime(2026, 8, 22, 16, 4, 59, 226, DateTimeKind.Local).AddTicks(4185),
+                            CreatedOn = new DateTime(2026, 8, 22, 10, 46, 41, 408, DateTimeKind.Local).AddTicks(554),
                             Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedOn = new DateTime(2026, 8, 22, 16, 4, 59, 226, DateTimeKind.Local).AddTicks(4208),
+                            CreatedOn = new DateTime(2026, 8, 22, 10, 46, 41, 408, DateTimeKind.Local).AddTicks(565),
                             Name = "Seller"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedOn = new DateTime(2026, 8, 22, 16, 4, 59, 226, DateTimeKind.Local).AddTicks(4209),
+                            CreatedOn = new DateTime(2026, 8, 22, 10, 46, 41, 408, DateTimeKind.Local).AddTicks(567),
                             Name = "Customer"
                         });
                 });
@@ -949,25 +911,6 @@ namespace EnterpriceECommerce.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.ProductReview", b =>
-                {
-                    b.HasOne("EnterpriceECommerce.Domain.Entitites.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EnterpriceECommerce.Domain.Entitites.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EnterpriceECommerce.Domain.Entitites.ProductSpecification", b =>

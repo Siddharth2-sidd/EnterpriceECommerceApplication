@@ -28,8 +28,10 @@ namespace EnterpriceECommerce.Persistence.Context
         public DbSet<Cart> Carts => Set<Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();
         public DbSet<Order> Orders => Set<Order>();
-
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+        public DbSet<Payment>  Payments => Set<Payment>();
+        public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<ProductReview> productReviews => Set<ProductReview>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

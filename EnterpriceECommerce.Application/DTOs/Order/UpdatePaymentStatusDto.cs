@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace EnterpriceECommerce.Application.DTOs.Order
 {
-    public class CheckoutRequestDto
+    public class UpdatePaymentStatusDto
     {
-        public int AddressId { get; set; }
-        public string PaymentMethod { get; set; } = string.Empty;
+        public string PaymentStatus { get; set; } = string.Empty;
     }
 }

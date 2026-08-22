@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EnterpriceECommerce.Application.DTOs.Order
+namespace EnterpriceECommerce.Application.DTOs.Payment
 {
-    public class CheckoutRequestDto
+    public class CreatePaymentRequestDto
     {
-        public int AddressId { get; set; }
+        public int OrderId { get; set; }
         public string PaymentMethod { get; set; } = string.Empty;
     }
 }

@@ -21,6 +21,9 @@ namespace EnterpriceECommerce.Application
             services.AddScoped<IProductSpecificationService, ProductSpecificationService>();
             services.AddScoped<IInventoryService, InventoryService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IOrderServices, OrderServices>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IAddressService, AddressServices>();
 
             services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
             services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();

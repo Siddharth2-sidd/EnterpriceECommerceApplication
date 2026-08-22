@@ -11,19 +11,25 @@ namespace EnterpriceECommerce.Application.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly ICartRepository _cartRepository;
+        private readonly IAddressRepository _addressRepository;
 
-        public OrderServices(IOrderRepository orderRepository, IProductRepository productRepository, ICartRepository cartRepository) 
+        public OrderServices(IOrderRepository orderRepository, IProductRepository productRepository,
+                             ICartRepository cartRepository, IAddressRepository addressRepository) 
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _cartRepository = cartRepository;
+            _addressRepository = addressRepository;
         }
         public async Task<OrderResponseDto> CheckOutAsync(CheckoutRequestDto request, int userId)
         {
-            if (string.IsNullOrWhiteSpace(request.ShippingAddress))
-            {
-                throw new Exception("Shipping address is required.");
-            }
+            var address = await _addressRepository.GetByIdAsync(request.AddressId);
+            
+            if (address == null)
+                throw new Exception("Address Not Found");
+            if (address.UserId != userId)
+                throw new UnauthorizedAccessException();
+            
 
             if (string.IsNullOrWhiteSpace(request.PaymentMethod))
             {
@@ -60,7 +66,7 @@ namespace EnterpriceECommerce.Application.Services
             {
                 UserId = userId,
                 OrderNumber = GenerateOrderNumber(),
-                ShippingAddress = request.ShippingAddress,
+                ShippingAddress = BuildShippingAddress(address),
                 PaymentMethod = request.PaymentMethod,
                 OrderStatus = "Pending",
                 PaymentStatus = "Pending"
@@ -129,6 +135,76 @@ namespace EnterpriceECommerce.Application.Services
             return $"ORD-{DateTime.UtcNow:yyyyMMddHHmmssfff}";
         }
 
+        public async Task<List<OrderResponseDto>>GetAllOrdersAsync(OrderFilterDto filter)
+        {
+            if (filter.PageNumber <= 0)
+                filter.PageNumber = 1;
+
+            if (filter.PageSize <= 0)
+                filter.PageSize = 10;
+
+            var orders = await _orderRepository.GetAllAsync(filter.Status,filter.PaymentStatus,filter.FromDate, filter.ToDate,
+                                                            filter.PageNumber,filter.PageSize);
+            return orders.Select(MapOrder).ToList();
+        }
+        public async Task UpdateOrderStatusAsync(int orderId,string status)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            var validStatuses = new[]{ OrderStatus.Pending,OrderStatus.Confirmed,OrderStatus.Processing,OrderStatus.Shipped,
+                                       OrderStatus.Delivered,OrderStatus.Cancelled};
+
+            if (!validStatuses.Contains(status))
+            {
+                throw new Exception("Invalid order status.");
+            }
+            order.OrderStatus = status;
+            order.UpdatedOn = DateTime.UtcNow;
+            await _orderRepository.SaveChangesAsync();
+        }
+        public async Task UpdatePaymentStatusAsync(int orderId,string paymentStatus)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            var validStatuses = new[]{PaymentStatus.Pending,PaymentStatus.Paid,PaymentStatus.Failed,PaymentStatus.Refunded};
+
+            if (!validStatuses.Contains(paymentStatus))
+            {
+                throw new Exception("Invalid payment status.");
+            }
+
+            order.PaymentStatus = paymentStatus;
+            order.UpdatedOn = DateTime.UtcNow;
+            await _orderRepository.SaveChangesAsync();
+        }
+        public async Task CancelOrderAsync(int orderId)
+        {
+            var order =  await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            if (order.OrderStatus == OrderStatus.Delivered)
+            {
+                throw new Exception("Delivered order cannot be cancelled.");
+            }
+
+            if (order.OrderStatus == OrderStatus.Cancelled)
+            {
+                throw new Exception("Order is already cancelled.");
+            }
+
+            order.OrderStatus = OrderStatus.Cancelled;
+            order.UpdatedOn = DateTime.UtcNow;
+            await _orderRepository.SaveChangesAsync();
+        }
+
         private static OrderResponseDto MapOrder(Order order)
         {
             return new OrderResponseDto
@@ -154,6 +230,11 @@ namespace EnterpriceECommerce.Application.Services
                             Quantity = item.Quantity,
                             TotalPrice =  item.TotalPrice}).ToList()
             };
+        }
+        private static string BuildShippingAddress(Address address)
+        {
+            return string.Join(", ",new[]{ address.FullName,address.PhoneNumber,address.AddressLine1,address.AddressLine2,
+            address.City,address.State,address.PostalCode,address.Country}.Where(x => !string.IsNullOrWhiteSpace(x)));
         }
     }
 }
