@@ -45,5 +45,18 @@ namespace EnterpriceECommerce.Api.Controllers
             var order = await _orderServices.GetByIdAsync(userId, orderId);
             return Ok(order);
         }
+        [Authorize]
+        [HttpPut("{orderId}/cancel")]
+        public async Task<IActionResult> Cancel(int orderId,CancelOrderDto request)
+        {
+            var userId = int.Parse( User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            await _orderServices.CancelAsync(userId, orderId, request.Reason);
+
+            return Ok(new
+            {
+                Message = "Order cancelled successfully."
+            });
+        }
     }
 }

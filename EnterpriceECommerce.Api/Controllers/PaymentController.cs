@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+﻿using EnterpriceECommerce.Application.DTOs.Order;
 using EnterpriceECommerce.Application.DTOs.Payment;
 using EnterpriceECommerce.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EnterpriceECommerce.API.Controllers;
 
@@ -40,5 +41,21 @@ public class PaymentController : ControllerBase
         var userId = GetUserId();
         var payment =  await _service.GetPaymentByOrderIdAsync(userId,orderId);
         return Ok(payment);
+    }
+    [HttpPost("{paymentId}/process")]
+    public async Task<IActionResult> ProcessPayment(int paymentId)
+    {
+        var userId = GetUserId();
+        var result = await _service.ProcessPaymentAsync(userId,paymentId);
+
+        return Ok(result);
+    }
+    [HttpPost("{paymentId}/refund")]
+    public async Task<IActionResult> Refund(int paymentId,CancelOrderDto request)
+    {
+        var userId = GetUserId();
+        var result =  await _service.RefundAsync(userId, paymentId, request.Reason);
+
+        return Ok(result);
     }
 }

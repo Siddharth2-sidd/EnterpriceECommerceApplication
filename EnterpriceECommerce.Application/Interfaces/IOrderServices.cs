@@ -16,5 +16,6 @@ namespace EnterpriceECommerce.Application.Interfaces
         Task UpdateOrderStatusAsync(int orderId,string status);
         Task UpdatePaymentStatusAsync(int orderId,string paymentStatus);
         Task CancelOrderAsync(int orderId);
+        Task CancelAsync(int userId,int orderId,string reason);
     }
 }

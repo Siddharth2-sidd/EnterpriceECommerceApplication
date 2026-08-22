@@ -204,6 +204,40 @@ namespace EnterpriceECommerce.Application.Services
             order.UpdatedOn = DateTime.UtcNow;
             await _orderRepository.SaveChangesAsync();
         }
+        public async Task CancelAsync(int userId, int orderId,string reason)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            if (order.UserId != userId)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            if (order.OrderStatus == "Delivered")
+            {
+                throw new Exception("Delivered order cannot be cancelled.");
+            }
+
+            if (order.OrderStatus == "Shipped")
+            {
+                throw new Exception("Shipped order cannot be cancelled.");
+            }
+
+            if (order.OrderStatus == "Cancelled")
+            {
+                throw new Exception("Order is already cancelled.");
+            }
+
+            order.OrderStatus =  "Cancelled";
+            order.UpdatedOn = DateTime.UtcNow;
+
+            await _orderRepository .SaveChangesAsync();
+        }
 
         private static OrderResponseDto MapOrder(Order order)
         {

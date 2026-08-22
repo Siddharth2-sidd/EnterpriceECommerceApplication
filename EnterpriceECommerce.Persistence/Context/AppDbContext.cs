@@ -33,6 +33,7 @@ namespace EnterpriceECommerce.Persistence.Context
         public DbSet<Address> Addresses => Set<Address>();
         public DbSet<ProductReview> productReviews => Set<ProductReview>();
         public DbSet<WishListItem> wishListItems => Set<WishListItem>();
+        public DbSet<Refund> Refunds => Set<Refund>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
