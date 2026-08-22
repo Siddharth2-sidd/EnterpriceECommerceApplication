@@ -32,6 +32,7 @@ namespace EnterpriceECommerce.Persistence.Context
         public DbSet<Payment>  Payments => Set<Payment>();
         public DbSet<Address> Addresses => Set<Address>();
         public DbSet<ProductReview> productReviews => Set<ProductReview>();
+        public DbSet<WishListItem> wishListItems => Set<WishListItem>();
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
