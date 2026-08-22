@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Configurations\**" />
+    <Compile Remove="Extensions\**" />
+    <Content Remove="Configurations\**" />
+    <Content Remove="Extensions\**" />
+    <EmbeddedResource Remove="Configurations\**" />
+    <EmbeddedResource Remove="Extensions\**" />
+    <None Remove="Configurations\**" />
+    <None Remove="Extensions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.29.1" />
     <PackageReference Include="FluentValidation" Version="8.6.3" />
@@ -25,11 +36,6 @@
     <ProjectReference Include="..\EnterpriceECommerce.Application\EnterpriceECommerce.Application.csproj" />
     <ProjectReference Include="..\EnterpriceECommerce.Persistence\EnterpriceECommerce.Persistence.csproj" />
     <ProjectReference Include="..\EnterpriseECommerce.Infrastructure\EnterpriceECommerce.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Configurations\" />
   </ItemGroup>
 
 </Project>

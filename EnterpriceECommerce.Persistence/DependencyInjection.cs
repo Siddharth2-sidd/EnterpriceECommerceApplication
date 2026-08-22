@@ -29,6 +29,7 @@ namespace EnterpriceECommerce.Persistence
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
             return services;
         }
     }
