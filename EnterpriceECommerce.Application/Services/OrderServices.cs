@@ -239,6 +239,102 @@ namespace EnterpriceECommerce.Application.Services
             await _orderRepository .SaveChangesAsync();
         }
 
+        // Admin
+        public async Task<List<AdminOrderResponseDto>>AdminGetAllAsync()
+        {
+            var orders = await _orderRepository.GetAllAsync();
+
+            return orders.Select(MapAdminOrder).ToList();
+        }
+        public async Task<AdminOrderResponseDto>AdminGetByIdAsync(int orderId)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            return MapAdminOrder(order);
+        }
+        public async Task AdminUpdateStatusAsync(int orderId,string status)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            var validStatuses = new[]{"Pending", "Confirmed","Processing","Shipped","Delivered","Cancelled"};
+
+            if (!validStatuses.Contains(status))
+            {
+                throw new Exception("Invalid order status.");
+            }
+
+            if (order.OrderStatus == "Delivered" &&
+                status != "Delivered")
+            {
+                throw new Exception("Delivered order cannot be changed.");
+            }
+
+            if (order.OrderStatus == "Cancelled")
+            {
+                throw new Exception("Cancelled order cannot be changed.");
+            }
+
+            order.OrderStatus = status;
+            order.UpdatedOn = DateTime.UtcNow;
+
+            await _orderRepository.SaveChangesAsync();
+        }
+        public async Task AdminUpdatePaymentStatusAsync(int orderId,string status)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            var validStatuses = new[]{ "Pending", "Paid","Failed", "Refunded" };
+
+            if (!validStatuses.Contains(status))
+            {
+                throw new Exception("Invalid payment status.");
+            }
+
+            order.PaymentStatus = status;
+            order.UpdatedOn = DateTime.UtcNow;
+
+            await _orderRepository.SaveChangesAsync();
+        }
+        public async Task AdminCancelAsync(int orderId)
+        {
+            var order = await _orderRepository.GetByIdAsync(orderId);
+
+            if (order == null)
+            {
+                throw new Exception("Order not found.");
+            }
+
+            if (order.OrderStatus == "Delivered")
+            {
+                throw new Exception("Delivered order cannot be cancelled.");
+            }
+
+            if (order.OrderStatus == "Cancelled")
+            {
+                throw new Exception("Order is already cancelled.");
+            }
+
+            order.OrderStatus = "Cancelled";
+            order.UpdatedOn = DateTime.UtcNow;
+
+            await _orderRepository.SaveChangesAsync();
+        }
+
         private static OrderResponseDto MapOrder(Order order)
         {
             return new OrderResponseDto
@@ -263,6 +359,33 @@ namespace EnterpriceECommerce.Application.Services
                             UnitPrice = item.UnitPrice,
                             Quantity = item.Quantity,
                             TotalPrice =  item.TotalPrice}).ToList()
+            };
+        }
+        private static AdminOrderResponseDto MapAdminOrder(Order order)
+        {
+            return new AdminOrderResponseDto
+            {
+                Id = order.Id,
+                OrderNumber = order.OrderNumber,
+                UserId =  order.UserId,
+                UserName = ($"{order.User?.FirstName ?? ""} {order.User?.LastName ?? ""}").Trim(),
+                Email = order.User?.Email ?? string.Empty,
+                TotalAmount = order.TotalAmount,
+                PaymentMethod =  order.PaymentMethod,
+                PaymentStatus =  order.PaymentStatus,
+                OrderStatus =  order.OrderStatus,
+                ShippingAddress =    order.ShippingAddress,
+                CreatedDate =  order.CreatedOn,
+
+                Items =  order.OrderItems .Select(item => new AdminOrderItemDto
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = item.ProductName,
+                            SKU = item.SKU,
+                            UnitPrice =  item.UnitPrice,
+                            Quantity =  item.Quantity,
+                            TotalPrice = item.TotalPrice
+                        }).ToList()
             };
         }
         private static string BuildShippingAddress(Address address)

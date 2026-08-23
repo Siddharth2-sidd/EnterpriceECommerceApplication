@@ -29,6 +29,10 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Order>> GetAllAsync(){
+            return await _context.Orders.Include(x => x.User).Include(x => x.OrderItems)
+                                        .OrderByDescending(x => x.CreatedOn).ToListAsync();
+        }
         public async Task<List<Order>> GetAllAsync(string? status, string? paymentStatus, DateTime? fromDate, DateTime? toDate,
                                                     int pageNumber,int pageSize)
         {

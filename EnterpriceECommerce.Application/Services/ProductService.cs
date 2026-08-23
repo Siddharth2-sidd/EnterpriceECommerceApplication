@@ -1,5 +1,7 @@
 ﻿
 using AutoMapper;
+using Azure.Core;
+using EnterpriceECommerce.Application.DTOs.Payment;
 using EnterpriceECommerce.Application.DTOs.Product;
 using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Domain.Comman;
@@ -92,6 +94,128 @@ namespace EnterpriceECommerce.Application.Services
             }
             await _productRepository.Delete(product);
             await _productRepository.SaveChangesAsync();
+        }
+
+        // Admin
+        public async Task<ProductResponseDTO> AdminCreateAsync(AdminCreateProductDto request)
+        {
+            if (request.Price < 0)
+                throw new Exception("Price cannot be negative.");
+
+            if (request.StockQuantity < 0)
+                throw new Exception("Stock cannot be negative.");
+
+            var existing =await _productRepository.ExitsBySKUAsync(request.SKU);
+
+            if (existing != null)
+            {
+                throw new Exception("SKU already exists.");
+            }
+
+            var product = new Product
+            {
+                CategoryId = request.CategoryId,
+                BrandId = request.BrandId,
+                Name =  request.Name,
+                SKU = request.SKU,
+                Description = request.Description,
+                Price = request.Price,
+                StockQuantity = request.StockQuantity,
+                IsFeatured =   request.IsFeatured,
+                IsActive =   request.IsActive,           
+                CreatedOn =  DateTime.UtcNow
+            };
+
+            await _productRepository.AddAsync(product);
+            await _productRepository.SaveChangesAsync();
+
+            return Map(product);
+        }
+        public async Task<ProductResponseDTO> AdminUpdateAsync(int productId, AdminUpdateProductDto request)
+        {
+            var product =await _productRepository.GetByIdAsync(productId);
+
+            if (product == null)
+                throw new Exception("Product not found.");
+            if (request.Price < 0)
+                throw new Exception("Price cannot be negative.");
+
+            if (request.StockQuantity < 0)
+                throw new Exception("Stock cannot be negative.");
+
+            var existing = await _productRepository.ExitsBySKUAsync(request.SKU);
+
+            if (existing != null)
+            {
+                throw new Exception("SKU already exists.");
+            }
+
+
+            product.CategoryId = request.CategoryId;
+            product.BrandId = request.BrandId;
+            product.Name = request.Name;
+            product.SKU = request.SKU;
+            product.Description = request.Description;
+            product.Price = request.Price;
+            product.StockQuantity = request.StockQuantity;
+            product.IsFeatured = request.IsFeatured;
+            product.IsActive = request.IsActive;
+            product.CreatedOn = DateTime.UtcNow;
+            
+
+            await _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
+
+            return Map(product);
+        }
+        public async Task UpdateStockAsync(int productId,int stockQuantity)
+        {
+            if (stockQuantity < 0)
+            {
+                throw new Exception("Stock cannot be negative.");
+            }
+
+            var product =  await _productRepository.GetByIdAsync(productId);
+
+            if (product == null)
+            {
+                throw new Exception("Product not found.");
+            }
+
+            product.StockQuantity =  stockQuantity;
+
+            product.UpdatedOn = DateTime.UtcNow;
+
+            await _productRepository.SaveChangesAsync();
+        }
+        public async Task AdminDeleteAsync(int productId) 
+        {
+            var product =  await _productRepository.GetByIdAsync(productId);
+
+            if (product == null)
+            {
+                throw new Exception("Product not found.");
+            }
+            product.IsActive = false;
+            product.UpdatedOn = DateTime.UtcNow;
+
+            await _productRepository.SaveChangesAsync();
+        }
+        private static ProductResponseDTO Map(Product product)
+        {
+            return new ProductResponseDTO
+            {
+                Id = product.Id,
+                CategoryId = product.CategoryId,
+                BrandId = product.BrandId,
+                Name = product.Name,
+                SKU = product.SKU,
+                Description = product.Description,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                IsFeatured = product.IsFeatured,
+                IsActive = product.IsActive,
+            };
         }
     }
 }
