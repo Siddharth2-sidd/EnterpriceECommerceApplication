@@ -12,6 +12,7 @@ import MyOrder from "../pages/MyOrder";
 import OrderDetail from "../pages/OrderDetail";
 
 function AppRoutes(){
+    return(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<Home/>}/>
@@ -25,6 +26,7 @@ function AppRoutes(){
             <Route path="/orders/:id" element={<OrderDetail/>}/>
         </Routes>
     </BrowserRouter>
+    )
 }
 
 export default AppRoutes;
