@@ -1,6 +1,12 @@
 function Home() {
     return (
-        <h1>Home Page</h1>
+        <div>
+        <h1>Welcome to EnterpriseEcommerce</h1>
+        <p>
+            Shop Your favorite products
+            online.
+        </p>
+        </div>
     );
 }
 

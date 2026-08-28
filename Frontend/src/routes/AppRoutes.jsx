@@ -10,11 +10,13 @@ import Cart from "../pages/Cart";
 import CheckOut from "../pages/CheckOut.jsx";
 import MyOrder from "../pages/MyOrder";
 import OrderDetail from "../pages/OrderDetail";
+import MainLayout from "../layouts/MainLayout.jsx";
 
 function AppRoutes(){
     return(
     <BrowserRouter>
         <Routes>
+            <Route element={<MainLayout/>}>
             <Route path="/" element={<Home/>}/>
             <Route path="/register" element={<Register/>}/>
             <Route path="/login" element={<Login/>}/>
@@ -24,6 +26,7 @@ function AppRoutes(){
             <Route path="/checkout" element={<CheckOut/>}/>
             <Route path="/orders" element={<MyOrder/>}/>
             <Route path="/orders/:id" element={<OrderDetail/>}/>
+            </Route>
         </Routes>
     </BrowserRouter>
     )
