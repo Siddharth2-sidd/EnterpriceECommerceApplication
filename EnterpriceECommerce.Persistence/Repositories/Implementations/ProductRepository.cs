@@ -22,7 +22,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
         }
         public async Task<List<Product>> GetAllAsync(ProductFilterDTO filter) 
         {
-            var query = _context.Products.Include(x => x.Category).Include(x => x.Brand).Where(x => !x.IsDeleted);
+            var query = _context.Products.Include(x => x.Category).Include(x => x.Brand).Include(x=>x.ProductImages).Include(x=>x.ProductSpecifications) .Where(x => !x.IsDeleted);
 
             //Search
             if (!string.IsNullOrWhiteSpace(filter.Search)) 

@@ -1,10 +1,12 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {loginUser} from "../services/authService";
+import {useAuth} from "../context/AuthContext";
 
 
 function Login(){
     const navigate = useNavigate();
+    const {login} = useAuth();
     const[formData, setFormData] = useState({email:"",password:""});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -19,7 +21,8 @@ function Login(){
         setError(""); setLoading(true);
         try{
             const response = await loginUser(formData);
-            console.log("Login Successfull", response);
+            // console.log("Login Successfull", response);
+            login(response.accessToken, response.refreshToken);
             navigate("/");
         }catch(error){
             setError(error?.response?.data?.message || "Invalid Email or Password");
@@ -34,9 +37,9 @@ function Login(){
                 <h1>Login</h1>
                 {error && (<p className="error">{error}</p>)}
                 <form onSubmit={handleSubmit}>
-                    <input type="text" name="firstName" placeholder= "First Name" value={formData.firstName} onChange={handleChange} required/>                    
+                    <input type="email" name="email" placeholder= "Email Address" value={formData.email} onChange={handleChange} required/>                    
                     <input type="password" name="password" placeholder= "Password" value={formData.password} onChange={handleChange} required/>                  
-                    <button type="submit" disable={loading}>
+                    <button type="submit" disabled={loading}>
                         {loading?"Logging in...":"Login"}
                     </button>
                 </form>

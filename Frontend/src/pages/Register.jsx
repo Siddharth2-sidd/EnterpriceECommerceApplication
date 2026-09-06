@@ -23,17 +23,19 @@ function Register(){
     };
 
     const handleSubmit = async (e)=>{
-        e.preventDefult();
+        
+        e.preventDefault();
         setError(""); setSuccess(""); setLoading(true);
         try{
             await registerUser(formData);
             setSuccess("Registration SuccessFull, Please Login.");
 
-            setTimeOut(()=>{
+            setTimeout(()=>{
                 navigate("/Login")
             },1500);
-        }catch{
+        }catch(error){
             setError(error?.response?.data?.message || "Registration Failed");
+            console.log(error);
         }finally{
             setLoading(false);
         }
@@ -50,7 +52,7 @@ function Register(){
                     <input type="email" name="email" placeholder= "Email" value={formData.email} onChange={handleChange} required/>
                     <input type="password" name="password" placeholder= "Password" value={formData.password} onChange={handleChange} required/>
                     <input type="password" name="confirmPassword" placeholder= "ConfirmPassword" value={formData.confirmPassword} onChange={handleChange} required/>
-                    <button type="submit" disable={loading}>
+                    <button type="submit" disabled={loading}>
                         {loading?"Create Account..":"Register"}
                     </button>
                 </form>

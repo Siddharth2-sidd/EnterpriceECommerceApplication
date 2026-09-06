@@ -76,6 +76,13 @@ namespace EnterpriceECommerce.Api
             Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!))
     };});
             builder.Services.AddAuthorization();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("ReactPolicy", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                });
+            });
 
             var app = builder.Build();
 
@@ -87,7 +94,8 @@ namespace EnterpriceECommerce.Api
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors("ReactPolicy");
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();

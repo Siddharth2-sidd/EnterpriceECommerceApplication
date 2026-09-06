@@ -35,8 +35,7 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] ProductFilterDTO filter)
     {
-        var products =
-            await _service.GetAllAsync(filter);
+        var products =  await _service.GetAllAsync(filter);
 
         return Ok(products);
     }
@@ -44,8 +43,7 @@ public class ProductController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var product =
-            await _service.GetByIdAsync(id);
+        var product = await _service.GetByIdAsync(id);
 
         return Ok(product);
     }
@@ -56,8 +54,7 @@ public class ProductController : ControllerBase
     {
         await _service.UpdateAsync(request);
 
-        return Ok(new
-        {
+        return Ok(new        {
             Message = "Product updated successfully."
         });
     }

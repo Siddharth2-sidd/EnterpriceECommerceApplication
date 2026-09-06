@@ -6,6 +6,11 @@ export const registerUser  = async (userData)=>{
 }
 
 export const loginUser = async(userData)=>{
-    const response = await api.post("Auth/Login",userData);
+    const response = await api.post("/Auth/Login",userData);
+    return response.data;
+}
+
+export const refreshAccessToken = async(refreshToken)=>{
+    const response = await api.post("/Auth/refresh-token",{refreshToken});
     return response.data;
 }

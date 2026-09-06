@@ -16,6 +16,7 @@ namespace EnterpriceECommerce.Application.Mappings
             CreateMap<CreateProductRequestDTO, Product>();
             CreateMap<UpdateProductRequestDTO, Product>();
             CreateMap<ProductSpecification,ProductSpecificationResponseDto>();
+            CreateMap<ProductImage, ProductImagesResponseDTO>();
             CreateMap<Product, ProductResponseDTO>()
 
             .ForMember(
