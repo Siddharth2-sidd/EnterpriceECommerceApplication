@@ -1,9 +1,13 @@
-﻿using EnterpriceECommerce.Application.DTOs.Product;
+﻿using Azure.Storage.Blobs;
+using EnterpriceECommerce.Application.DTOs.Product;
 using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Application.Services;
 using EnterpriceECommerce.Domain.Comman;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Options;
+using System.Runtime;
 
 namespace EnterpriceECommerce.API.Controllers;
 
@@ -13,11 +17,13 @@ public class ProductController : ControllerBase
 {
     private readonly IProductServices _service;
     private readonly IProductImageService _imageService;
+    private readonly AzureBlobStorageSettings _settings;
 
-    public ProductController(IProductServices service, IProductImageService imageService)
+    public ProductController(IProductServices service, IProductImageService imageService, IOptions<AzureBlobStorageSettings> options)
     {
         _service = service;
         _imageService = imageService;
+        _settings = options.Value;
     }
 
     [Authorize(Roles = "Admin")]
@@ -70,6 +76,26 @@ public class ProductController : ControllerBase
             Message = "Product deleted successfully."
         });
     }
+
+    [HttpGet("images/{fileName}")]
+    public async Task<IActionResult> GetImage(string fileName)
+    {
+        var container = new BlobContainerClient(_settings.ConnectionString,_settings.ContainerName);
+        var blob = container.GetBlobClient(fileName);
+        if (!await blob.ExistsAsync())
+        {
+            return NotFound("Image not found.");
+        }
+        var response = await blob.DownloadStreamingAsync();
+        var provider = new FileExtensionContentTypeProvider();
+        if (!provider.TryGetContentType(fileName, out var contentType))
+        {
+            contentType = "application/octet-stream";
+        }
+        return File( response.Value.Content,contentType,enableRangeProcessing: true);
+    }
+    
+
     [Authorize(Roles = "Admin")]
     [HttpPost("images")]
     public async Task<IActionResult> AddImages([FromForm] AddProductImagesRequestDTO request)

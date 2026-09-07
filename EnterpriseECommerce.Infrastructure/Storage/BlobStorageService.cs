@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using EnterpriceECommerce.Domain.Comman;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -27,9 +28,9 @@ namespace EnterpriceECommerce.Infrastructure.Storage
 
             using var stream = file.OpenReadStream();
 
-            await blob.UploadAsync(stream, overwrite: true);
+            await blob.UploadAsync( stream, new BlobUploadOptions{HttpHeaders = new BlobHttpHeaders{ContentType = file.ContentType}});
 
-            return blob.Uri.ToString();
+            return fileName;
         }
 
         public async Task DeleteAsync(string fileUrl)
