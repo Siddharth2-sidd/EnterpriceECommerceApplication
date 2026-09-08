@@ -24,13 +24,13 @@ function AppRoutes(){
             <Route path="/login" element={<Login/>}/>
             <Route path="/products" element={<Products/>}/>
             <Route path="/products/:id" element={<ProductDetails/>}/>
-            <Route element={<ProtectedRoute/>}>
+            {/* <Route element={<ProtectedRoute/>}> */}
             <Route path="/cart" element={<Cart/>}/>
             <Route path="/checkout" element={<CheckOut/>}/>
             <Route path="/orders" element={<MyOrder/>}/>
             <Route path="/orders/:id" element={<OrderDetail/>}/>
             </Route>
-            </Route>
+            {/* </Route> */}
         </Routes>
     </BrowserRouter>
     )

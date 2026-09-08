@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import {useAuth} from "../../context/AuthContext";
+import {useCart} from "../../context/CartContext";
 
 function Navbar() {
     const {accessToken, logout} = useAuth();
+    const {getCartItemCount} = useCart();
+    const cartItemCount = getCartItemCount();
     return (
         <nav className="navbar">
             <div className="navbar-container">
@@ -12,7 +15,7 @@ function Navbar() {
 
                     <Link to="/">Home</Link>
                     <Link to="/products"> Products </Link>
-                    <Link to="/cart"> Cart </Link>
+                    <Link to="/cart"> Cart ({cartItemCount}) </Link>
                     {accessToken ? (
                     <>
                     <Link to="/orders"> My Orders </Link>
