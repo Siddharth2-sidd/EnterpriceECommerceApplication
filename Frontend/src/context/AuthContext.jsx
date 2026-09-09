@@ -1,48 +1,61 @@
-import {createContext, useContext, useState} from "react";
-import {refreshAccessToken} from "../services/authService";
+import { createContext, useContext, useEffect, useState } from "react";
+import { loginUser } from "../api/authApi";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({children}) =>{
-    const [accessToken, setAccessToken] = useState(localStorage.getItem("accessToekn"));
-    const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"));
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const login = (accessToken, refreshToken) =>{
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        setAccessToken(accessToken);
-        setRefreshToken(refreshToken);
-    };
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    const storedUser = localStorage.getItem("user");
+    if (token) {
+      setAccessToken(token);
+    }
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false);
+  }, []);
 
-    const refresh = async()=>{
-        if(!refreshToken){
-            return null;
-        }
-        try{
-            const response = await refreshAccessToken(refreshToken);
-            const newAccessToken = response.accessToken;
-            const newrefreshToken  = response.refreshToken || refreshToken;
-            login(newAccessToken, newrefreshToken);
-            return newAccessToken;
-        }catch(error){
-            logout();
-            return null;
-        }
+  const login = async (email, password) => {
+    const response = await loginUser({email, password,});
+    console.log("Login response:", response);
 
+    const token = response.accessToken;
+    const refreshToken = response.refreshToken;
+
+    localStorage.setItem("accessToken", token);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    setAccessToken(token);
+
+    if (response.user) {
+      localStorage.setItem("user", JSON.stringify(response.user));
+      setUser(response.user);
     }
 
-    const logout = ()=>{
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+    return response;
+  };
 
-        setAccessToken(null);
-        setRefreshToken(null);
-    };
-    return(
-            <AuthContext.Provider value={{accessToken, refreshToken, login, logout, refresh}}>{children}</AuthContext.Provider>
-    );
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+
+    setAccessToken(null);
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{user, accessToken, loading, login, logout, isAuthenticated: !!accessToken, }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = ()=>{
-    return useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

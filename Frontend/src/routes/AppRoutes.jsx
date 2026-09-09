@@ -1,39 +1,39 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import ProtectedRoute from "../routes/ProtectedRoute.jsx";
+import { Routes, Route } from "react-router-dom";
+import Login from "../pages/auth/Login";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
+const Home = () => {
+  return (
+    <div>
+      <h1>Enterprise ECommerce</h1>
+      <p>Home Page</p>
+    </div>
+  );
+};
 
-import Home from "../pages/Home.jsx";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Products from "../pages/Products";
-import ProductDetails from "../pages/ProductDetails";
-import Cart from "../pages/Cart";
-import CheckOut from "../pages/CheckOut.jsx";
-import MyOrder from "../pages/MyOrder";
-import OrderDetail from "../pages/OrderDetail";
-import MainLayout from "../layouts/MainLayout.jsx";
+const Dashboard = () => {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <p>This page requires authentication.</p>
+    </div>
+  );
+};
 
-function AppRoutes(){
-    return(
-    <BrowserRouter>
-        <Routes>
-            
-            <Route element={<MainLayout/>}>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/register" element={<Register/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/products" element={<Products/>}/>
-            <Route path="/products/:id" element={<ProductDetails/>}/>
-            {/* <Route element={<ProtectedRoute/>}> */}
-            <Route path="/cart" element={<Cart/>}/>
-            <Route path="/checkout" element={<CheckOut/>}/>
-            <Route path="/orders" element={<MyOrder/>}/>
-            <Route path="/orders/:id" element={<OrderDetail/>}/>
-            </Route>
-            {/* </Route> */}
-        </Routes>
-    </BrowserRouter>
-    )
+function AppRoutes() {
+  return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />}/>
+      </Route>
+
+    </Routes>
+  );
 }
 
 export default AppRoutes;

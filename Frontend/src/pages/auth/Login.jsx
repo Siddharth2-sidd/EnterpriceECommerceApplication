@@ -1,6 +1,5 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {loginUser} from "../services/authService";
 import {useAuth} from "../../context/AuthContext";
 
 
@@ -20,8 +19,8 @@ function Login(){
         e.preventDefault();
         setError(""); setLoading(true);
         try{
-            const response = await loginUser(formData);
-            // console.log("Login Successfull", response);
+            const response = await login(formData);
+            console.log("Login Successfull", response);
             login(response.accessToken, response.refreshToken);
             navigate("/");
         }catch(error){
@@ -32,16 +31,20 @@ function Login(){
 
     }
     return(
-       <div className="auth-container">
-            <div className="auth-card">
+       <div className="login-container">
+            <div className="login-card">
                 <h1>Login</h1>
-                {error && (<p className="error">{error}</p>)}
+                {error && (<div className="error-message">{error}</div>)}
                 <form onSubmit={handleSubmit}>
-                    <input type="email" name="email" placeholder= "Email Address" value={formData.email} onChange={handleChange} required/>                    
-                    <input type="password" name="password" placeholder= "Password" value={formData.password} onChange={handleChange} required/>                  
-                    <button type="submit" disabled={loading}>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" placeholder= "Email Address" value={formData.email} onChange={handleChange} required/>                    
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder= "Password" value={formData.password} onChange={handleChange} required/>                  
+                        <button type="submit" disabled={loading}>
                         {loading?"Logging in...":"Login"}
-                    </button>
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

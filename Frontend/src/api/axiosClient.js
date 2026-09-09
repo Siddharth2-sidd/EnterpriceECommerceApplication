@@ -1,10 +1,10 @@
 import axios from "axios";
-const api = axios.create({
+const axiosClient = axios.create({
     baseURL:import.meta.env.VITE_API_URL,
     headers:{"Content-Type": "application/json"}
 });
 
-api.interceptors.request.use((config)=>{
+axiosClient.interceptors.request.use((config)=>{
 
     const accessToken = localStorage.getItem("accessToken");
     if(accessToken){
@@ -17,4 +17,4 @@ api.interceptors.request.use((config)=>{
     }
 );
 
-export default api;
+export default axiosClient;
