@@ -1,17 +1,11 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {registerUser} from "../services/authService";
-import "../App.css";
+import {registerUser} from "../../api/authApi";
+// import "C:\Users\siddh\source\repos\EnterpriceECommerce\Frontend\src\App.css";
 
 function Register(){
     const navigate = useNavigate();
-    const[formData, setFormData] = useState({
-  "firstName": "",
-  "lastName": "",
-  "email": "",
-  "password": "",
-  "confirmPassword": ""
-});
+    const[formData, setFormData] = useState({"firstName": "", "lastName": "", "email": "", "password": "", "confirmPassword": ""});
 
     const [error,setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -22,10 +16,15 @@ function Register(){
         setFormData({...formData,[name]:value});
     };
 
-    const handleSubmit = async (e)=>{
-        
+    const handleSubmit = async (e)=>{        
         e.preventDefault();
         setError(""); setSuccess(""); setLoading(true);
+
+        if (formData.password !== formData.confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         try{
             await registerUser(formData);
             setSuccess("Registration SuccessFull, Please Login.");
@@ -33,6 +32,7 @@ function Register(){
             setTimeout(()=>{
                 navigate("/Login")
             },1500);
+
         }catch(error){
             setError(error?.response?.data?.message || "Registration Failed");
             console.log(error);
@@ -40,6 +40,7 @@ function Register(){
             setLoading(false);
         }
     }
+
     return (
         <div className="auth-container">
             <div className="auth-card">
@@ -52,9 +53,7 @@ function Register(){
                     <input type="email" name="email" placeholder= "Email" value={formData.email} onChange={handleChange} required/>
                     <input type="password" name="password" placeholder= "Password" value={formData.password} onChange={handleChange} required/>
                     <input type="password" name="confirmPassword" placeholder= "ConfirmPassword" value={formData.confirmPassword} onChange={handleChange} required/>
-                    <button type="submit" disabled={loading}>
-                        {loading?"Create Account..":"Register"}
-                    </button>
+                    <button type="submit" disabled={loading}> {loading?"Create Account..":"Register"} </button>
                 </form>
             </div>
         </div>

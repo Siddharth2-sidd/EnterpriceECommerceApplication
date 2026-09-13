@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link,useNavigate} from "react-router-dom";
 import {useAuth} from "../../context/AuthContext";
 
 
@@ -19,11 +19,13 @@ function Login(){
         e.preventDefault();
         setError(""); setLoading(true);
         try{
-            const response = await login(formData);
+            
+            const response = await login(formData.email, formData.password);
             console.log("Login Successfull", response);
             login(response.accessToken, response.refreshToken);
             navigate("/");
         }catch(error){
+            // console.log(error);
             setError(error?.response?.data?.message || "Invalid Email or Password");
         }finally{
             setLoading(false);
@@ -46,6 +48,8 @@ function Login(){
                         </button>
                     </div>
                 </form>
+                <p className="auth-link"> <Link to="/register">  Create an account  </Link> </p>
+                <p className="auth-link"> <Link to="/forgot-password">  Forgot Password?  </Link> </p>
             </div>
         </div>
     );
