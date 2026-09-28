@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import {forgotPassword} from "../../api/authApi";
 
-function ForgetPassword(){
+function ForgotPassword(){
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -16,7 +16,7 @@ function ForgetPassword(){
             await forgotPassword({email});
             setSuccess("If email exits password reset link send");
         }catch(error){
-            console.log(error);
+            console.error(error);
             setError(error.response?.data?.message || error.response?.data || "unable to proccess your request");
         }finally{
             setLoading(false);
@@ -56,4 +56,4 @@ function ForgetPassword(){
     )
 }
 
-export default ForgetPassword;
+export default ForgotPassword;

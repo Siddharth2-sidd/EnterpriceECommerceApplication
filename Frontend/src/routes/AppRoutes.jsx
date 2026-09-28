@@ -1,19 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import Forgetpassword from "../pages/auth/ForgetPassword";
+import Forgotpassword from "../pages/auth/ForgotPassword";
 import ResetPassword from "../pages/auth/ResetPassword";
+import Home from "../pages/Home"
+import Navbar from "../components/common/Navbar"
 import ProtectedRoute from "../routes/ProtectedRoute";
 import {useAuth} from "../context/AuthContext";
-
-const Home = () => {
-  return (
-    <div>
-      <h1>Enterprise ECommerce</h1>
-      <p>Home Page</p>
-    </div>
-  );
-};
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -28,20 +21,22 @@ const Dashboard = () => {
 
 function AppRoutes() {
   return (
+    <>
+    <Navbar/>
     <Routes>
       {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />      
       <Route path="/register" element={<Register />} />
-      <Route path="/forget-password" element={<Forgetpassword/>} />
+      <Route path="/forgot-password" element={<Forgotpassword/>} />
       <Route path="/reset-password" element={<ResetPassword/>}/>
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />}/>
       </Route>
-
     </Routes>
+    </>
   );
 }
 

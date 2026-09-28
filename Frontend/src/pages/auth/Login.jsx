@@ -22,7 +22,7 @@ function Login(){
             
             const response = await login(formData.email, formData.password);
             console.log("Login Successfull", response);
-            login(response.accessToken, response.refreshToken);
+            // login(response.accessToken, response.refreshToken);
             navigate("/");
         }catch(error){
             // console.log(error);

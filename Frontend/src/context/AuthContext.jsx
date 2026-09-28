@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("fullName");
     if (token) {
       setAccessToken(token);
     }
@@ -23,8 +23,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
 
     const response = await loginUser({email, password,});
-    console.log("Login response:", response);
-
+    // console.log("Login response:", response);
     const token = response.accessToken;
     const refreshToken = response.refreshToken;
 
@@ -32,10 +31,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("refreshToken", refreshToken);
 
     setAccessToken(token);
-
-    if (response.user) {
-      localStorage.setItem("user", JSON.stringify(response.user));
-      setUser(response.user);
+    if (response.fullName) {
+      // console.log(JSON.stringify(response.fullName))
+      localStorage.setItem("fullName", JSON.stringify(response.fullName));
+      setUser(response.fullName);
     }
 
     return response;
@@ -51,9 +50,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
+    <>
     <AuthContext.Provider value={{user, accessToken, loading, login, logout, isAuthenticated: !!accessToken, }}>
-      {children}
+      {children}{accessToken}{user}
     </AuthContext.Provider>
+    </>
   );
 };
 
