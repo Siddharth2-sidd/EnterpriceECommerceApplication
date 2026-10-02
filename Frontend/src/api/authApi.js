@@ -39,3 +39,4 @@ export const resendVerification = async (email) => {
   const response = await axiosClient.post(`/Auth/resend-verification?email=${encodeURIComponent(email)}`);
   return response.data;
 };
+

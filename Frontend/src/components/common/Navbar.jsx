@@ -15,10 +15,12 @@ function Navbar() {
             <div className="navbar-container">
                 <Link to="/" className="logo"> EnterpriseECommerce</Link>
                 <div className="nav-links">
-                    <Link to="/">Home</Link>
+                    <Link to="/">Home</Link>                    
                     <Link to="/products"> Products </Link>
+                    <Link to="/brands"> Brands </Link>
                     {isAuthenticated && (
                     <>
+                        <Link to="/categories">Categories</Link>
                         <Link to="/wishlist"> Wishlist </Link>
                         <Link to="/cart"> Cart </Link>
                         <Link to="/orders"> Orders </Link>      

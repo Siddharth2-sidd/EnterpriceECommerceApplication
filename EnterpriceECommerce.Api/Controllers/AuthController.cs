@@ -11,7 +11,6 @@ namespace EnterpriceECommerce.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authservices;
-
         public AuthController(IAuthService services) { 
             _authservices = services;
         }

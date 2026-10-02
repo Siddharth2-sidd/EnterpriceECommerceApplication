@@ -24,10 +24,10 @@ export const AuthProvider = ({ children }) => {
 
     const response = await loginUser({email, password,});
     // console.log("Login response:", response);
-    const token = response.accessToken;
+    const token = response.token;
     const refreshToken = response.refreshToken;
 
-    localStorage.setItem("accessToken", token);
+    localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
 
     setAccessToken(token);
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <>
     <AuthContext.Provider value={{user, accessToken, loading, login, logout, isAuthenticated: !!accessToken, }}>
-      {children}{accessToken}{user}
+      {children}
     </AuthContext.Provider>
     </>
   );

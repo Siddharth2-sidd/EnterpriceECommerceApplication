@@ -1,18 +1,18 @@
-import {Outlet} from "react-router-dom";
+// import {Outlet} from "react-router-dom";
 
-import Navbar from "../components/common/Navbar";
-import Footer from "../components/common/Footer";
+// import Navbar from "../components/common/Navbar";
+// import Footer from "../components/common/Footer";
 
-function MainLayout(){
-    return(
-        <>
-            <Navbar/>
-            <main className="main-content">
-                <Outlet/>
-            </main>
-            <Footer/>
-        </>
-    );
-}
+// function MainLayout(){
+//     return(
+//         <>
+//             <Navbar/>
+//             <main className="main-content">
+//                 <Outlet/>
+//             </main>
+//             <Footer/>
+//         </>
+//     );
+// }
 
-export default MainLayout;
+// export default MainLayout;

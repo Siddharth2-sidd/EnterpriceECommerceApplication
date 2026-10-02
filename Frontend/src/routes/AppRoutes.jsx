@@ -7,6 +7,9 @@ import Home from "../pages/Home"
 import Navbar from "../components/common/Navbar"
 import ProtectedRoute from "../routes/ProtectedRoute";
 import {useAuth} from "../context/AuthContext";
+import CategoryList from "../pages/categories/CategoryList";
+import BrandList from "../pages/brands/BrandList";
+import Footer from "../components/common/Footer";
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -30,12 +33,14 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<Forgotpassword/>} />
       <Route path="/reset-password" element={<ResetPassword/>}/>
-
+      <Route path="/categories" element={<CategoryList/>} />
+      <Route path="/brands" element={<BrandList/>}/>
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />}/>
       </Route>
     </Routes>
+    <Footer />
     </>
   );
 }
