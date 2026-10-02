@@ -10,6 +10,7 @@ import {useAuth} from "../context/AuthContext";
 import CategoryList from "../pages/categories/CategoryList";
 import BrandList from "../pages/brands/BrandList";
 import Footer from "../components/common/Footer";
+import ProductList from "../pages/products/ProductList";
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -35,6 +36,7 @@ function AppRoutes() {
       <Route path="/reset-password" element={<ResetPassword/>}/>
       <Route path="/categories" element={<CategoryList/>} />
       <Route path="/brands" element={<BrandList/>}/>
+      <Route path="/products" element={<ProductList/>}/>
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />}/>
