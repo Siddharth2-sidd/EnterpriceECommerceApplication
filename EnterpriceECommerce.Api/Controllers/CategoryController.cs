@@ -28,7 +28,7 @@ namespace EnterpriceECommerce.Api.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllCategoryAsync([FromQuery] FilterDTO filter)
         {
@@ -37,7 +37,7 @@ namespace EnterpriceECommerce.Api.Controllers
                 throw new Exception("category is Empty");
             return Ok(categories);
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(int id) 
         {

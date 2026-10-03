@@ -11,6 +11,7 @@ import CategoryList from "../pages/categories/CategoryList";
 import BrandList from "../pages/brands/BrandList";
 import Footer from "../components/common/Footer";
 import ProductList from "../pages/products/ProductList";
+import ProductDetails from "../pages/products/ProductDetails";
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -37,6 +38,7 @@ function AppRoutes() {
       <Route path="/categories" element={<CategoryList/>} />
       <Route path="/brands" element={<BrandList/>}/>
       <Route path="/products" element={<ProductList/>}/>
+      <Route path="/product/:id" element={<ProductDetails/>}/>
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />}/>

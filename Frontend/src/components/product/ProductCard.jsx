@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
           <p className="stock-out"> Out of Stock </p>
         )}
 
-        <Link to={`/products/${product.id}`} className="product-button"> View Details </Link>
+        <Link to={`/product/${product.id}`} className="product-button"> View Details </Link>
       </div>
     </div>
   );
