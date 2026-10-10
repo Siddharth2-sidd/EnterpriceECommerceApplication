@@ -7,3 +7,8 @@ export const getProductsById = async(id)=>{
     const response = await api.get(`/product/${id}`);
     return response.data;
 }
+
+export const productSpecifications  = async(productId)=>{
+    const response = await api.get(`/product-specifications/product/${productId}`);
+    return response.data;
+}

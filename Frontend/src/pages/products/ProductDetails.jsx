@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductsById } from "../../api/productApi";
+import ProductImageGallery from "../../components/product/ProductImageGallary";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -75,15 +76,7 @@ const ProductDetails = () => {
 
       <div className="product-details-layout">
         {/* Product Image */}
-        <div className="product-details-image">
-          {imageUrl ? (
-            <img src={imageUrl} alt={product.name} />
-          ) : (
-            <div className="product-details-placeholder">
-              No Image Available
-            </div>
-          )}
-        </div>
+        <ProductImageGallery images={product.images || product.productImages || []} productName={product.name}/>
 
         {/* Product Information */}
         <div className="product-details-info">
