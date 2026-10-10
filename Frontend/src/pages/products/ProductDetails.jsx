@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { getProductsById } from "../../api/productApi";
 import ProductImageGallery from "../../components/product/ProductImageGallary";
 import ProductSpecifications from "../../components/product/ProductSpecifications";
+import {addToWishlist, removeFromWishlist, isProductInWishlist,} from "../../api/wishlistApi";
+
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -10,6 +12,11 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const navigate =  useNavigate();
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [wishlistChecked, setWishlistChecked] = useState(false);
+  const [wishlistError, setWishlistError] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,6 +52,35 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
+  useEffect(() => {
+  if (!product?.id) return;
+  let cancelled = false;
+  const checkWishlist = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setWishlistChecked(true);
+      return;
+    }
+    try {
+      const response = await isProductInWishlist(product.id);
+      const exists = typeof response === "boolean" ? response : response?.exists ?? response?.isInWishlist ?? false;
+      if (!cancelled) {
+        setInWishlist(exists);
+      }
+    } catch (err) {
+      console.error("Failed to check wishlist:", err);
+    } finally {
+      if (!cancelled) {
+        setWishlistChecked(true);
+      }
+    }
+  };
+  setWishlistChecked(false);
+  checkWishlist();
+  return () => { cancelled = true;
+  };
+}, [product?.id]);
+
   const increaseQuantity = () => {
     if (quantity < (product?.stockQuantity ?? 1)) {
       setQuantity((prev) => prev + 1);
@@ -54,6 +90,31 @@ const ProductDetails = () => {
   const decreaseQuantity = () => {
     setQuantity((prev) => Math.max(1, prev - 1));
   };
+
+  const handleWishlistClick = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+  try {
+    setWishlistLoading(true);
+    setWishlistError("");
+
+    if (inWishlist) {
+      await removeFromWishlist(product.id);
+      setInWishlist(false);
+    } else {
+      await addToWishlist(product.id);
+      setInWishlist(true);
+    }
+  } catch (err) {
+    console.error("Wishlist action failed:", err);
+    setWishlistError(err.response?.data?.message || "Unable to update wishlist. Please try again.");
+  } finally {
+    setWishlistLoading(false);
+  }
+};
   if (loading) {
     return <div className="product-details-message">Loading product...</div>;
   }
@@ -125,6 +186,11 @@ const ProductDetails = () => {
           <button type="button" className="add-to-cart-button"  disabled={!inStock} title="Cart integration will be implemented in Step 21" >
             {inStock ? "Add to Cart — Step 21" : "Out of Stock"}
           </button>
+          <button type="button" className="wishlist-toggle-button" onClick={handleWishlistClick} disabled={wishlistLoading || !wishlistChecked}>
+            {wishlistLoading ? "Updating..." : inWishlist ? "♥ Remove from Wishlist" : "♡ Add to Wishlist"}
+          </button>
+
+        {wishlistError && (<p className="wishlist-error" role="alert"> {wishlistError}</p>)}
         </div>
         <ProductSpecifications productId={product.id} />
       </div>

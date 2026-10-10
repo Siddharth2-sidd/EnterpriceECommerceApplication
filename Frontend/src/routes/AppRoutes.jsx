@@ -12,6 +12,7 @@ import BrandList from "../pages/brands/BrandList";
 import Footer from "../components/common/Footer";
 import ProductList from "../pages/products/ProductList";
 import ProductDetails from "../pages/products/ProductDetails";
+import Wishlist from "../pages/wishlist/Wishlist";
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -42,6 +43,7 @@ function AppRoutes() {
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="/wishlist" element={<Wishlist/>} />
       </Route>
     </Routes>
     <Footer />
