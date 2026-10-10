@@ -1497,3 +1497,169 @@ input {
     grid-template-columns: 1fr;
   }
 }
+
+/* Product Reviews */
+
+.product-reviews {
+  margin-top: 40px;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.product-reviews h2 {
+  margin: 0 0 20px;
+  color: #111827;
+}
+
+.review-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding: 18px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.review-summary strong {
+  font-size: 22px;
+}
+
+.review-summary>span:last-child {
+  color: #64748b;
+}
+
+.review-stars {
+  color: #f59e0b;
+  font-size: 19px;
+  letter-spacing: 2px;
+}
+
+.review-stars-empty {
+  color: #d1d5db;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 35px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.review-form h3 {
+  margin: 0 0 8px;
+}
+
+.review-form label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.review-form textarea {
+  resize: vertical;
+}
+
+.review-form-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.review-form-actions button,
+.review-owner-actions button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.review-form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.review-form-actions .review-cancel-button {
+  background: #64748b;
+}
+
+.review-list h3 {
+  margin-bottom: 15px;
+}
+
+.review-card {
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.review-card p {
+  line-height: 1.7;
+  color: #475569;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.review-card small {
+  color: #64748b;
+}
+
+.review-owner-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.review-owner-actions .review-delete-button {
+  background: #dc2626;
+}
+
+.review-error {
+  color: #dc2626;
+  margin: 12px 0;
+}
+
+.review-success {
+  color: #15803d;
+  margin: 12px 0;
+}
+
+@media (max-width: 600px) {
+  .product-reviews {
+    padding: 15px;
+  }
+
+  .review-form {
+    padding: 14px;
+  }
+
+  .review-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

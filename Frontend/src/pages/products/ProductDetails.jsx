@@ -4,6 +4,7 @@ import { getProductsById } from "../../api/productApi";
 import ProductImageGallery from "../../components/product/ProductImageGallary";
 import ProductSpecifications from "../../components/product/ProductSpecifications";
 import {addToWishlist, removeFromWishlist, isProductInWishlist,} from "../../api/wishlistApi";
+import ProductReviews from "../../components/product/ProductReview";
 
 
 const ProductDetails = () => {
@@ -193,6 +194,7 @@ const ProductDetails = () => {
         {wishlistError && (<p className="wishlist-error" role="alert"> {wishlistError}</p>)}
         </div>
         <ProductSpecifications productId={product.id} />
+        <ProductReviews productId={product.id} />
       </div>
     </div>
   );
