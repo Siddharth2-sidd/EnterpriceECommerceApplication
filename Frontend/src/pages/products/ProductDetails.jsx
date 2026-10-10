@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getProductsById } from "../../api/productApi";
 import ProductImageGallery from "../../components/product/ProductImageGallary";
+import ProductSpecifications from "../../components/product/ProductSpecifications";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -125,6 +126,7 @@ const ProductDetails = () => {
             {inStock ? "Add to Cart — Step 21" : "Out of Stock"}
           </button>
         </div>
+        <ProductSpecifications productId={product.id} />
       </div>
     </div>
   );

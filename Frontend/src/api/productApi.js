@@ -8,7 +8,7 @@ export const getProductsById = async(id)=>{
     return response.data;
 }
 
-export const productSpecifications  = async(productId)=>{
+export const getProductSpecifications  = async(productId)=>{
     const response = await api.get(`/product-specifications/product/${productId}`);
     return response.data;
 }

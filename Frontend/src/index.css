@@ -1276,3 +1276,81 @@ input {
     height: 65px;
   }
 }
+
+/* Product Specifications */
+
+.specifications-section {
+  margin-top: 45px;
+  padding: 25px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.specifications-section h2 {
+  margin: 0 0 20px;
+  color: #111827;
+  font-size: 24px;
+}
+
+.specifications-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.specifications-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.specifications-table th,
+.specifications-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.specifications-table th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 600;
+}
+
+.specifications-table td:first-child {
+  width: 40%;
+  color: #475569;
+  font-weight: 500;
+}
+
+.specifications-table td:last-child {
+  color: #111827;
+}
+
+.specifications-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.no-specifications {
+  color: #64748b;
+  padding: 10px 0;
+}
+
+.specifications-error {
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .specifications-section {
+    margin-top: 30px;
+    padding: 15px;
+  }
+
+  .specifications-section h2 {
+    font-size: 21px;
+  }
+
+  .specifications-table th,
+  .specifications-table td {
+    padding: 11px 10px;
+  }
+}
