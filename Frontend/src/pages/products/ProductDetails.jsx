@@ -5,6 +5,7 @@ import ProductImageGallery from "../../components/product/ProductImageGallary";
 import ProductSpecifications from "../../components/product/ProductSpecifications";
 import {addToWishlist, removeFromWishlist, isProductInWishlist,} from "../../api/wishlistApi";
 import ProductReviews from "../../components/product/ProductReview";
+import { addToCart } from "../../api/cartApi";
 
 
 const ProductDetails = () => {
@@ -18,6 +19,9 @@ const ProductDetails = () => {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [wishlistChecked, setWishlistChecked] = useState(false);
   const [wishlistError, setWishlistError] = useState("");
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [cartMessage, setCartMessage] = useState("");
+  const [cartError, setCartError] = useState("");
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -116,6 +120,44 @@ const ProductDetails = () => {
     setWishlistLoading(false);
   }
 };
+
+const handleAddToCart = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+  if (!product?.id) {
+    setCartError("Product details are not available.");
+    return;
+  }
+  const quantityToAdd = Number(quantity);
+  const stock = Number(product.stockQuantity);
+
+  if (!Number.isInteger(quantityToAdd) || quantityToAdd < 1) {
+    setCartError("Please enter a valid quantity.");
+    return;
+  }
+
+  if (!Number.isFinite(stock) || stock < quantityToAdd) {
+    setCartError("The requested quantity is unavailable.");
+    return;
+  }
+
+  setAddingToCart(true);
+  setCartError("");
+  setCartMessage("");
+
+  try {
+    await addToCart(product.id, quantityToAdd);
+    setCartMessage("Product added to your cart.");
+  } catch (err) {
+    setCartError( err.response?.data?.message ?? "Could not add this product to your cart.");
+  } finally {
+    setAddingToCart(false);
+  }
+};
+
   if (loading) {
     return <div className="product-details-message">Loading product...</div>;
   }
@@ -184,9 +226,11 @@ const ProductDetails = () => {
           )}
 
           <p className="detail-total"> Total: ₹{(displayPrice * quantity).toFixed(2)} </p>
-          <button type="button" className="add-to-cart-button"  disabled={!inStock} title="Cart integration will be implemented in Step 21" >
-            {inStock ? "Add to Cart — Step 21" : "Out of Stock"}
+          <button type="button" className="add-to-cart-button" onClick={handleAddToCart} disabled={addingToCart || !inStock || quantity < 1 || quantity > product.stockQuantity}>
+            {addingToCart ? "Adding..." : inStock ? "Add to Cart" : "Out of Stock"}
           </button>
+          {cartMessage && (<p role="status" className="cart-action-message">{cartMessage}</p>)}
+          {cartError && (<p role="alert" className="cart-error"> {cartError}</p>)}
           <button type="button" className="wishlist-toggle-button" onClick={handleWishlistClick} disabled={wishlistLoading || !wishlistChecked}>
             {wishlistLoading ? "Updating..." : inWishlist ? "♥ Remove from Wishlist" : "♡ Add to Wishlist"}
           </button>
