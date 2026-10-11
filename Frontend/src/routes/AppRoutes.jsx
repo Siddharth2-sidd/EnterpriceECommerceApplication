@@ -14,6 +14,7 @@ import ProductList from "../pages/products/ProductList";
 import ProductDetails from "../pages/products/ProductDetails";
 import Wishlist from "../pages/wishlist/Wishlist";
 import Cart from "../pages/cart/Cart";
+import AddressManagement from "../pages/address/AddressManagement";
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -46,6 +47,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="/wishlist" element={<Wishlist/>} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/addresses" element={<AddressManagement/>}/>
       </Route>
     </Routes>
     <Footer />

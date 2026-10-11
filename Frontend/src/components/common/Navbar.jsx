@@ -23,7 +23,8 @@ function Navbar() {
                         <Link to="/categories">Categories</Link>
                         <Link to="/wishlist"> Wishlist </Link>
                         <Link to="/cart"> Cart </Link>
-                        <Link to="/orders"> Orders </Link>      
+                        <Link to="/orders"> Orders </Link>
+                        <Link to="/addresses">My Addresses</Link>     
                     </>)}
                 </div>
                     {/* User Section */}
