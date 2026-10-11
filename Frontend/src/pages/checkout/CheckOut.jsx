@@ -1,7 +1,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { getCart } from "../../api/cartApi";
 import { getAddresses } from "../../api/addressApi";
 import { checkoutOrder } from "../../api/orderApi";
@@ -38,6 +37,7 @@ function getAddressList(response) {
 }
 
 function getProduct(item) {
+    console.log(item);
   return item.product ?? item;
 }
 
@@ -82,31 +82,20 @@ function Checkout() {
     setError("");
 
     try {
-      const [cartResponse, addressResponse] = await Promise.all([
-        getCart(),
-        getAddresses(),
-      ]);
-
+      const [cartResponse, addressResponse] = await Promise.all([getCart(), getAddresses()]);
       const cartItems = getCartItems(cartResponse);
       const addressItems = getAddressList(addressResponse);
+      console.log(cartItems);
 
       setItems(cartItems);
       setAddresses(addressItems);
 
-      const defaultAddress = addressItems.find(
-        (address) => address.isDefault
-      );
-
+      const defaultAddress = addressItems.find((address) => address.isDefault);
       const initialAddress = defaultAddress ?? addressItems[0];
 
-      setSelectedAddressId(
-        initialAddress ? String(getAddressId(initialAddress)) : ""
-      );
+      setSelectedAddressId(initialAddress ? String(getAddressId(initialAddress)) : "");
     } catch (err) {
-      setError(
-        err.response?.data?.message ??
-        "Unable to load checkout information."
-      );
+      setError(err.response?.data?.message ?? "Unable to load checkout information.");
     } finally {
       setLoading(false);
     }
@@ -116,16 +105,8 @@ function Checkout() {
     loadCheckoutData();
   }, [loadCheckoutData]);
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + getPrice(item) * getQuantity(item),
-    0
-  );
-
-  const selectedAddress = addresses.find(
-    (address) =>
-      String(getAddressId(address)) === String(selectedAddressId)
-  );
-
+  const subtotal = items.reduce((sum, item) => sum + getPrice(item) * getQuantity(item), 0);
+  const selectedAddress = addresses.find((address) =>String(getAddressId(address)) === String(selectedAddressId));
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
 
@@ -148,11 +129,7 @@ function Checkout() {
     setError("");
 
     try {
-      const response = await checkoutOrder(
-        selectedAddressId,
-        paymentMethod
-      );
-
+      const response = await checkoutOrder(selectedAddressId, paymentMethod);
       const orderId = getOrderId(response);
 
       if (orderId != null) {
@@ -166,10 +143,7 @@ function Checkout() {
         navigate("/orders", { replace: true });
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message ??
-        "Checkout failed. Please review your cart and try again."
-      );
+      setError(err.response?.data?.message ?? "Checkout failed. Please review your cart and try again.");
     } finally {
       setPlacingOrder(false);
     }
@@ -274,11 +248,11 @@ function Checkout() {
 
                 <div className="checkout-items">
                   {items.map((item, index) => {
+                    Console.log(item);
                     const product = getProduct(item);
                     const quantity = getQuantity(item);
                     const price = getPrice(item);
-                    const itemId =
-                      item.cartItemId ?? item.id ?? product.id ?? index;
+                    const itemId = item.cartItemId ?? item.id ?? product.id ?? index;
 
                     return (
                       <article className="checkout-item" key={itemId}>
@@ -287,10 +261,7 @@ function Checkout() {
                           <p>Quantity: {quantity}</p>
                           <p>Unit price: ₹{price.toFixed(2)}</p>
                         </div>
-
-                        <strong>
-                          ₹{(price * quantity).toFixed(2)}
-                        </strong>
+                        <strong> ₹{(price * quantity).toFixed(2)} </strong>
                       </article>
                     );
                   })}
