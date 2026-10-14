@@ -23,6 +23,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminRoute from "../components/auth/AdminRoute";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminProducts from "../pages/admin/AdminProduct";
+import AdminOrder from "../pages/admin/AdminOrder";
 
 
 const Dashboard = () => {
@@ -64,7 +65,8 @@ function AppRoutes() {
       </Route>
         <Route path="/admin/users" element={<AdminRoute> <AdminUsers /> </AdminRoute>}/>
         <Route path="/admin" element={<AdminRoute> <AdminDashboard /> </AdminRoute>}/>
-        <Route path="/admin/products" element={<AdminRoute> <AdminProducts/> </AdminRoute>}
+        <Route path="/admin/products" element={<AdminRoute> <AdminProducts/> </AdminRoute>} />
+        <Route path="/admin/orders" element={<AdminRoute> <AdminOrder/> </AdminRoute>}/>
     </Routes>
     <Footer />
     </>
