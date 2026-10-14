@@ -24,3 +24,8 @@ export const getOrderById = async (orderId) => {
   const response = await axiosClient.get(`/Order/${orderId}`);
   return response.data;
 };
+
+export const cancelOrder = async (orderId, reason) => {
+  const response = await axiosClient.put(`/Order/${orderId}/cancel`,  null,{params: { Reason: reason },});
+  return response.data;
+};

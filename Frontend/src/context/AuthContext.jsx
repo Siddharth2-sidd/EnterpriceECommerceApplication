@@ -20,6 +20,17 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+  const handleAuthLogout = () => {
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+  window.addEventListener("auth:logout", handleAuthLogout);
+  return () => {
+    window.removeEventListener( "auth:logout", handleAuthLogout);
+  };
+}, []);
+
   const login = async (email, password) => {
 
     const response = await loginUser({email, password,});

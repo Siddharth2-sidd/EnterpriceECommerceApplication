@@ -16,6 +16,14 @@ import Wishlist from "../pages/wishlist/Wishlist";
 import Cart from "../pages/cart/Cart";
 import AddressManagement from "../pages/address/AddressManagement";
 import Checkout from "../pages/checkout/CheckOut";
+import MyOrders from "../pages/orders/MyOrder";
+import OrderDetails from "../pages/orders/OrderDetails";
+import PaymentStatus from "../pages/payment/PaymentStatus";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminRoute from "../components/auth/AdminRoute";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminProducts from "../pages/admin/AdminProduct";
+
 
 const Dashboard = () => {
   const {user, logout} = useAuth();
@@ -50,7 +58,13 @@ function AppRoutes() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/addresses" element={<AddressManagement/>}/>
         <Route path="/checkout" element={<Checkout/>}/>
+        <Route path="/orders" element={<MyOrders/>}/>
+        <Route path="/orders/:orderId" element={<OrderDetails/>}/>
+        <Route path="/payment/:orderId" element={<PaymentStatus/>}/> 
       </Route>
+        <Route path="/admin/users" element={<AdminRoute> <AdminUsers /> </AdminRoute>}/>
+        <Route path="/admin" element={<AdminRoute> <AdminDashboard /> </AdminRoute>}/>
+        <Route path="/admin/products" element={<AdminRoute> <AdminProducts/> </AdminRoute>}
     </Routes>
     <Footer />
     </>

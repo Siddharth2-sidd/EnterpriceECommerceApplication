@@ -158,6 +158,7 @@ function Checkout() {
   }
 
   return (
+    
     <main className="checkout-page">
       <h1>Checkout</h1>
 
@@ -166,7 +167,7 @@ function Checkout() {
           {error}
         </p>
       )}
-
+    {console.log(items)}
       {items.length === 0 ? (
         <section className="checkout-empty">
           <h2>Your cart is empty</h2>
@@ -247,6 +248,7 @@ function Checkout() {
                 <h2>2. Order Items</h2>
 
                 <div className="checkout-items">
+                    
                   {items.map((item, index) => {
                     Console.log(item);
                     const product = getProduct(item);
