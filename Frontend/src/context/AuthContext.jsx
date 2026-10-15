@@ -5,17 +5,22 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("fullName");
+    const role = localStorage.getItem("role");
     if (token) {
       setAccessToken(token);
     }
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    }
+    if(role){
+      setRole(role);
     }
     setLoading(false);
   }, []);
@@ -32,14 +37,15 @@ export const AuthProvider = ({ children }) => {
 }, []);
 
   const login = async (email, password) => {
-
     const response = await loginUser({email, password,});
     // console.log("Login response:", response);
     const token = response.token;
     const refreshToken = response.refreshToken;
+    const role = response.role;
 
     localStorage.setItem("token", token);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("role", role);
 
     setAccessToken(token);
     if (response.fullName) {
@@ -52,9 +58,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
 
     setAccessToken(null);
     setUser(null);
@@ -62,7 +69,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <>
-    <AuthContext.Provider value={{user, accessToken, loading, login, logout, isAuthenticated: !!accessToken, }}>
+    <AuthContext.Provider value={{role,user, accessToken, loading, login, logout, isAuthenticated: !!accessToken, }}>
       {children}
     </AuthContext.Provider>
     </>

@@ -3,12 +3,20 @@ import {useAuth} from "../../context/AuthContext";
 
 
 function Navbar() {
-    const {user, isAuthenticated, logout} = useAuth();
+    const {role,user, isAuthenticated, logout} = useAuth();
     const navigate = useNavigate();
     const handleLogout = ()=>{
         logout();
         navigate("/login")
     };
+    const storedRole = (() => {
+        try {
+            return JSON.parse(localStorage.getItem("role") || "null");
+        } catch {
+            return null;
+  }
+})();
+    const isAdmin = role === "Admin"?"Admin":null;
 
     return(
         <nav className="navbar">
@@ -18,6 +26,7 @@ function Navbar() {
                     <Link to="/">Home</Link>                    
                     <Link to="/products"> Products </Link>
                     <Link to="/brands"> Brands </Link>
+                    
                     {isAuthenticated && (
                     <>
                         <Link to="/categories">Categories</Link>
@@ -26,6 +35,7 @@ function Navbar() {
                         <Link to="/addresses">My Addresses</Link>
                         <Link to="/orders">My Orders</Link>     
                     </>)}
+                    {isAuthenticated && isAdmin && (<Link to="/admin" className="navbar-admin-link"> Admin Panel </Link>)}
                 </div>
                     {/* User Section */}
                 <div className="navbar-user">

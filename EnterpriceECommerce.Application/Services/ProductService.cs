@@ -1,7 +1,5 @@
 ﻿
 using AutoMapper;
-using Azure.Core;
-using EnterpriceECommerce.Application.DTOs.Payment;
 using EnterpriceECommerce.Application.DTOs.Product;
 using EnterpriceECommerce.Application.Interfaces;
 using EnterpriceECommerce.Domain.Comman;

@@ -21,9 +21,10 @@ import OrderDetails from "../pages/orders/OrderDetails";
 import PaymentStatus from "../pages/payment/PaymentStatus";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminRoute from "../components/auth/AdminRoute";
-import AdminUsers from "./pages/admin/AdminUsers";
+import AdminUsers from "../pages/admin/AdminUser";
 import AdminProducts from "../pages/admin/AdminProduct";
 import AdminOrder from "../pages/admin/AdminOrder";
+import AdminLayout from "../layouts/AdminLayout"
 
 
 const Dashboard = () => {
@@ -62,11 +63,15 @@ function AppRoutes() {
         <Route path="/orders" element={<MyOrders/>}/>
         <Route path="/orders/:orderId" element={<OrderDetails/>}/>
         <Route path="/payment/:orderId" element={<PaymentStatus/>}/> 
+      </Route>    
+      <Route path="/admin" element={<AdminRoute>  <AdminLayout />  </AdminRoute> }>
+      <Route index element={<AdminDashboard />} />
+      <Route path="users" element={<AdminUsers />} />
+      <Route path="products" element={<AdminProducts />} />
+      <Route path="orders" element={<AdminOrder />} />
+      <Route path="inventory" element={<div>Inventory management page is coming next.</div>}/>
       </Route>
-        <Route path="/admin/users" element={<AdminRoute> <AdminUsers /> </AdminRoute>}/>
-        <Route path="/admin" element={<AdminRoute> <AdminDashboard /> </AdminRoute>}/>
-        <Route path="/admin/products" element={<AdminRoute> <AdminProducts/> </AdminRoute>} />
-        <Route path="/admin/orders" element={<AdminRoute> <AdminOrder/> </AdminRoute>}/>
+
     </Routes>
     <Footer />
     </>

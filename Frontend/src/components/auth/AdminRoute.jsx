@@ -1,39 +1,29 @@
 import { Navigate } from "react-router-dom";
-function getUserRole(user) {
-  const rawRoles = user?.roles ?? user?.role;
+// function getUserRole(user) {
+//   const rawRoles = user?.roles ?? user?.role;
 
-  const roles = Array.isArray(rawRoles)
-    ? rawRoles
-    : rawRoles
-      ? [rawRoles]
-      : [];
+//   const roles = Array.isArray(rawRoles)
+//     ? rawRoles
+//     : rawRoles
+//       ? [rawRoles]
+//       : [];
 
-  return roles
-    .map((role) => {
-      if (typeof role === "string") return role;
-      return role?.name ?? role?.roleName ?? "";
-    })
-    .map((role) => role.toLowerCase());
-}
-
+//   return roles
+//     .map((role) => {
+//       if (typeof role === "string") return role;
+//       return role?.name ?? role?.roleName ?? "";
+//     })
+//     .map((role) => role);
+// }
 export default function AdminRoute({ children }) {
-  const token = localStorage.getItem("accessToken");
-
-  let user = null;
-
-  try {
-    user = JSON.parse(localStorage.getItem("user") ?? "null");
-  } catch {
-    user = null;
-  }
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  const roles = getUserRole(user);
-
-  if (!roles.includes("admin")) {
+  if (role !== "Admin") {
     return <Navigate to="/" replace />;
   }
 
