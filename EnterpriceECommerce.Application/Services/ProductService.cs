@@ -103,9 +103,9 @@ namespace EnterpriceECommerce.Application.Services
             if (request.StockQuantity < 0)
                 throw new Exception("Stock cannot be negative.");
 
-            var existing =await _productRepository.ExitsBySKUAsync(request.SKU);
+            var existing = await _productRepository.ExitsBySKUAsync(request.SKU);
 
-            if (existing != null)
+            if (existing)
             {
                 throw new Exception("SKU already exists.");
             }
@@ -119,6 +119,7 @@ namespace EnterpriceECommerce.Application.Services
                 Description = request.Description,
                 Price = request.Price,
                 StockQuantity = request.StockQuantity,
+                DiscountPrice = request.DiscountPrice,
                 IsFeatured =   request.IsFeatured,
                 IsActive =   request.IsActive,           
                 CreatedOn =  DateTime.UtcNow
@@ -131,7 +132,7 @@ namespace EnterpriceECommerce.Application.Services
         }
         public async Task<ProductResponseDTO> AdminUpdateAsync(int productId, AdminUpdateProductDto request)
         {
-            var product =await _productRepository.GetByIdAsync(productId);
+            var product = await _productRepository.GetByIdAsync(productId);
 
             if (product == null)
                 throw new Exception("Product not found.");
@@ -143,11 +144,10 @@ namespace EnterpriceECommerce.Application.Services
 
             var existing = await _productRepository.ExitsBySKUAsync(request.SKU);
 
-            if (existing != null)
+            if (existing)
             {
                 throw new Exception("SKU already exists.");
             }
-
 
             product.CategoryId = request.CategoryId;
             product.BrandId = request.BrandId;
@@ -155,6 +155,7 @@ namespace EnterpriceECommerce.Application.Services
             product.SKU = request.SKU;
             product.Description = request.Description;
             product.Price = request.Price;
+            product.DiscountPrice = request.DiscountPrice;
             product.StockQuantity = request.StockQuantity;
             product.IsFeatured = request.IsFeatured;
             product.IsActive = request.IsActive;
@@ -172,18 +173,17 @@ namespace EnterpriceECommerce.Application.Services
             {
                 throw new Exception("Stock cannot be negative.");
             }
-
             var product =  await _productRepository.GetByIdAsync(productId);
-
             if (product == null)
             {
                 throw new Exception("Product not found.");
             }
+            if (product.IsDeleted) {
+                throw new Exception("Cannot update deleted product stock");
+            }
 
             product.StockQuantity =  stockQuantity;
-
             product.UpdatedOn = DateTime.UtcNow;
-
             await _productRepository.SaveChangesAsync();
         }
         public async Task AdminDeleteAsync(int productId) 
@@ -195,6 +195,7 @@ namespace EnterpriceECommerce.Application.Services
                 throw new Exception("Product not found.");
             }
             product.IsActive = false;
+            product.IsDeleted = true;
             product.UpdatedOn = DateTime.UtcNow;
 
             await _productRepository.SaveChangesAsync();
