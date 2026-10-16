@@ -63,21 +63,22 @@ public class AdminUserService : IAdminUserService
     public async Task ChangeRoleAsync(int userId, ChangeUserRoleDto request)
     {
         var user =  await _userRepository.GetByIdAsync(userId);
-
         if (user == null)
         {
             throw new Exception("User not found.");
         }
 
-        var role = request.Role;
+        var roleId = request.RoleId;
+        if (roleId == null) {
+            throw new Exception("Role value is not define");
+        }
 
         //if (role != "User" && role != "Admin")
         //{
         //    throw new Exception("Invalid role.");
         //}
 
-        user.Role = role;
-
+        user.RoleId = roleId;
         await _userRepository.SaveChangesAsync();
     }
 
@@ -88,7 +89,7 @@ public class AdminUserService : IAdminUserService
             Id = user.Id,
             UserName = $"{user.FirstName} {user.LastName}",
             Email =  user.Email,
-            Role = user.Role,
+            Role = user.Role.Name,
             IsActive = user.IsActive,
             CreatedDate =   user.CreatedOn
         };

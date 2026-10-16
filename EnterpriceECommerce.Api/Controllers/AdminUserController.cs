@@ -56,13 +56,13 @@ public class AdminUserController : ControllerBase
     }
 
     [HttpPut("{userId}/role")]
-    public async Task<IActionResult> ChangeRole(int userId, ChangeUserRoleDto request)
+    public async Task<IActionResult> ChangeRole(int userId, [FromBody] ChangeUserRoleDto request)
     {
-        await _service.ChangeRoleAsync(userId,request);
-
+        await _service.ChangeRoleAsync(userId, request);
         return Ok(new
         {
-            Message = "User role updated successfully."
+            Message = "User role updated successfully.",
+            roleId = request.RoleId
         });
     }
 }

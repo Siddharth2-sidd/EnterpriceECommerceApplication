@@ -36,7 +36,7 @@ namespace EnterpriceECommerce.Persistence.Repositories.Implementations
 
         public async Task<List<User>> GetAllAsync() 
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Role).ToListAsync();
         }
 
         public async Task UpdateAsync(User user) {

@@ -20,7 +20,7 @@ export const deactivateUser = async (userId) => {
 
 // Change a user's role.
 // Replace the request body with your exact backend DTO.
-export const changeUserRole = async (userId, role) => {
-  const response = await axiosClient.put(`/admin/users/${userId}/role`, { role });
+export const changeUserRole = async (userId, roleId) => {
+  const response = await axiosClient.put(`/admin/users/${userId}/role`, { roleId :roleId });
   return response.data;
 };

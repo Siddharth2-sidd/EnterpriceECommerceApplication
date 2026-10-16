@@ -19,7 +19,7 @@ public class AdminProductController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(ProductFilterDTO filter)
+    public async Task<IActionResult> GetAll([FromQuery] ProductFilterDTO filter)
     {
         var products =  await _service.GetAllAsync(filter);
 

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {getAdminUsers, activateUser, deactivateUser,changeUserRole,} from "../../api/adminUserApi";
 
-const AVAILABLE_ROLES = ["Customer", "Seller", "Admin"];
+const AVAILABLE_ROLES = [
+  { id: 1, name: "Admin" },
+  { id: 2, name: "Seller" },
+  { id: 3, name: "Customer" }
+];
 
 function unwrapResponse(response) {
   return response?.data ?? response;
@@ -24,34 +28,11 @@ function getUserId(user) {
 }
 
 function getUserName(user) {
-  return (
-    user?.fullName ??
-    user?.name ??
-    [user?.firstName, user?.lastName]
-      .filter(Boolean)
-      .join(" ") ??
-    "Unnamed user"
-  );
+  return (user?.userName ?? "Unnamed user");
 }
 
 function getUserRole(user) {
-  const role = user?.role ?? user?.roleName ?? user?.roles;
-
-  if (Array.isArray(role)) {
-    return role
-      .map((item) =>
-        typeof item === "string"
-          ? item
-          : item?.name ?? item?.roleName ?? ""
-      )
-      .filter(Boolean)
-      .join(", ") || "Unknown";
-  }
-
-  if (typeof role === "object" && role !== null) {
-    return role.name ?? role.roleName ?? "Unknown";
-  }
-
+  const role = user?.role ?? null;
   return role || "Unknown";
 }
 
@@ -64,12 +45,7 @@ function getErrorMessage(error) {
 
   if (typeof data === "string") return data;
 
-  return (
-    data?.message ??
-    data?.title ??
-    error?.message ??
-    "The operation failed."
-  );
+  return (data?.message ?? data?.title ?? error?.message ?? "The operation failed.");
 }
 
 export default function AdminUsers() {
@@ -178,6 +154,7 @@ export default function AdminUsers() {
 
   const handleRoleChange = async (user, nextRole) => {
     const userId = getUserId(user);
+    
 
     if (userId == null || !nextRole) {
       setActionError("A valid user ID and role are required.");
@@ -186,13 +163,11 @@ export default function AdminUsers() {
 
     const currentRole = getUserRole(user);
 
-    if (currentRole.toLowerCase() === nextRole.toLowerCase()) {
-      return;
-    }
+    // if (currentRole.toLowerCase() === nextRole.toLowerCase()) {
+    //   return;
+    // }
 
-    const confirmed = window.confirm(
-      `Change ${getUserName(user)}'s role from ${currentRole} to ${nextRole}?`
-    );
+    const confirmed = window.confirm(`Change ${getUserName(user)}'s role from ${currentRole} to ${nextRole}?`);
 
     if (!confirmed) {
       await loadUsers();
@@ -203,7 +178,7 @@ export default function AdminUsers() {
       setBusyUserId(userId);
       setActionError("");
       setMessage("");
-
+      console.log(userId,nextRole)
       await changeUserRole(userId, nextRole);
 
       setMessage("User role updated successfully.");
@@ -225,11 +200,7 @@ export default function AdminUsers() {
           <p>Manage accounts, roles, and account status.</p>
         </div>
 
-        <button
-          className="admin-users-refresh"
-          onClick={loadUsers}
-          disabled={loading}
-        >
+        <button className="admin-users-refresh" onClick={loadUsers} disabled={loading}>
           {loading ? "Loading..." : "Refresh Users"}
         </button>
       </header>
@@ -253,32 +224,15 @@ export default function AdminUsers() {
       )}
 
       <section className="admin-users-filters">
-        <input
-          type="search"
-          placeholder="Search by name, email or user ID..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          aria-label="Search users"
-        />
-
-        <select
-          value={roleFilter}
-          onChange={(event) => setRoleFilter(event.target.value)}
-          aria-label="Filter by role"
-        >
+        <input type="search" placeholder="Search by name, email or user ID..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search users" />
+        <select value={roleFilter} onChange={(event) => setRoleFilter(event.target.value)} aria-label="Filter by role">
           <option value="All">All roles</option>
           {AVAILABLE_ROLES.map((role) => (
-            <option key={role} value={role}>
-              {role}
-            </option>
+            <option key={role.id} value={role}> {role.name} </option>
           ))}
         </select>
 
-        <select
-          value={statusFilter}
-          onChange={(event) => setStatusFilter(event.target.value)}
-          aria-label="Filter by account status"
-        >
+        <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter by account status">
           <option value="All">All statuses</option>
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
@@ -323,9 +277,7 @@ export default function AdminUsers() {
                   <tr key={userId ?? index}>
                     <td>
                       <strong>{getUserName(user)}</strong>
-                      <span className="admin-users-email">
-                        {user?.email ?? "No email"}
-                      </span>
+                      <span className="admin-users-email"> {user?.email ?? "No email"} </span>
                     </td>
 
                     <td>{userId ?? "—"}</td>
@@ -334,63 +286,30 @@ export default function AdminUsers() {
 
                     <td>
                       {typeof active === "boolean" ? (
-                        <span
-                          className={`admin-user-status ${
-                            active ? "active" : "inactive"
-                          }`}
-                        >
-                          {active ? "Active" : "Inactive"}
-                        </span>
+                        <span className={`admin-user-status ${active ? "active" : "inactive"}`}> {active ? "Active" : "Inactive"} </span>
                       ) : (
-                        <span className="admin-user-status unknown">
-                          Unknown
-                        </span>
+                        <span className="admin-user-status unknown"> Unknown </span>
                       )}
                     </td>
 
                     <td>
-                      <select
-                        value={
-                          AVAILABLE_ROLES.find(
-                            (item) =>
-                              item.toLowerCase() === role.toLowerCase()
-                          ) ?? ""
-                        }
-                        onChange={(event) =>
-                          handleRoleChange(user, event.target.value)
-                        }
-                        disabled={busy}
-                        aria-label={`Change role for ${getUserName(user)}`}
-                      >
+                      <select value={ AVAILABLE_ROLES.find((item) => item.name.toLowerCase() === role.toLowerCase())?.id ?? ""}
+                        onChange={(event) => handleRoleChange(user, Number(event.target.value))} disabled={busy}  aria-label={`Change role for ${getUserName(user)}`}>
                         <option value="" disabled>
                           Select role
                         </option>
                         {AVAILABLE_ROLES.map((availableRole) => (
-                          <option
-                            key={availableRole}
-                            value={availableRole}
-                          >
-                            {availableRole}
-                          </option>
+                          <option key={availableRole.id} value={availableRole.id}> {availableRole.name} </option>
                         ))}
                       </select>
                     </td>
 
                     <td>
-                      <button
-                        className={
-                          active
-                            ? "admin-user-action deactivate"
-                            : "admin-user-action activate"
-                        }
+                      <button className={active ? "admin-user-action deactivate" : "admin-user-action activate"}
                         disabled={busy || typeof active !== "boolean"}
                         onClick={() => handleStatusChange(user)}
                       >
-                        {busy
-                          ? "Saving..."
-                          : active
-                            ? "Deactivate"
-                            : "Activate"}
+                        {busy ? "Saving..." : active ? "Deactivate" : "Activate"}
                       </button>
                     </td>
                   </tr>
