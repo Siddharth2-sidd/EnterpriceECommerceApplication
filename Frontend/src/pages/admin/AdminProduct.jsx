@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {getAdminProducts,createAdminProduct,updateAdminProduct, deleteAdminProduct,} from "../../api/adminProductApi";
+import {getAdminProducts,createAdminProduct,updateAdminProduct, deleteAdminProduct,adjustProductStock} from "../../api/adminProductApi";
 import { getCategories } from "../../api/categoryApi";
 import { getBrands } from "../../api/brandApi";
 
@@ -268,6 +268,34 @@ export default function AdminProducts() {
     }
   };
 
+  
+const handleAdjustStock = async (product) => {
+  const productId = getProductId(product);
+  const currentStock = getProductStock(product);
+  const input = window.prompt(`Enter new stock quantity for ${product.name}:`, String(currentStock));
+  if (input === null) return;
+
+  const stockQuantity = Number(input);
+
+  if (!Number.isInteger(stockQuantity) || stockQuantity < 0) {
+    setPageError("Stock quantity must be a non-negative integer.");
+    return;
+  }
+
+  try {
+    setPageError("");
+    setMessage("");
+
+    await adjustProductStock(productId, { stockQuantity });
+
+    setMessage("Product stock updated successfully.");
+    await loadData();
+  } catch (error) {
+    setPageError(getErrorMessage(error));
+  }
+};
+
+
   return (
     <main className="admin-products-page">
       <header className="admin-products-header">
@@ -348,6 +376,7 @@ export default function AdminProducts() {
                       <div className="admin-product-row-actions">
                         <button className="secondary"  onClick={() => openEditForm(product)}> Edit </button>
                         <button className="danger"  onClick={() => handleDelete(product)}> Delete </button>
+                        <button className="secondary" onClick={() => handleAdjustStock(product)}> Adjust Stock</button>
                       </div>
                     </td>
                   </tr>
