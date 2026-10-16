@@ -153,14 +153,12 @@ export default function AdminUsers() {
   };
 
   const handleRoleChange = async (user, nextRole) => {
-    const userId = getUserId(user);
-    
+    const userId = getUserId(user);  
 
     if (userId == null || !nextRole) {
       setActionError("A valid user ID and role are required.");
       return;
     }
-
     const currentRole = getUserRole(user);
 
     // if (currentRole.toLowerCase() === nextRole.toLowerCase()) {
@@ -180,7 +178,6 @@ export default function AdminUsers() {
       setMessage("");
       console.log(userId,nextRole)
       await changeUserRole(userId, nextRole);
-
       setMessage("User role updated successfully.");
       await loadUsers();
     } catch (error) {
