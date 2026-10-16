@@ -23,11 +23,8 @@ function readValue(object, keys, fallback = "") {
 
 function formatDate(value) {
   if (!value) return "—";
-
   const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? "—"
-    : date.toLocaleString();
+  return Number.isNaN(date.getTime())? "—" : date.toLocaleString();
 }
 
 function formatCurrency(value) {
@@ -47,44 +44,23 @@ function getOrderId(order) {
 }
 
 function getOrderStatus(order) {
-  return readValue(
-    order,
-    ["status", "orderStatus", "Status", "OrderStatus"],
-    "Pending"
-  );
+  return readValue(order, ["status", "orderStatus", "Status", "OrderStatus"], "Pending");
 }
 
 function getPaymentStatus(order) {
-  return readValue(
-    order,
-    ["paymentStatus", "PaymentStatus"],
-    "Pending"
-  );
+  return readValue(order, ["paymentStatus", "PaymentStatus"], "Pending");
 }
 
 function getTotal(order) {
-  return readValue(
-    order,
-    ["totalAmount", "total", "grandTotal", "TotalAmount", "Total"],
-    null
-  );
+  return readValue(order,["totalAmount", "total", "grandTotal", "TotalAmount", "Total"], null);
 }
 
 function getCustomer(order) {
   const customer = order?.user ?? order?.customer ?? order?.User;
 
   return (
-    readValue(order, [
-      "customerName",
-      "userName",
-      "CustomerName",
-      "UserName",
-      "email",
-      "Email",
-    ]) ||
-    readValue(customer, ["fullName", "name", "email", "FullName", "Name", "Email"]) ||
-    "Customer"
-  );
+    readValue(order, ["customerName", "userName", "CustomerName", "UserName", "email", "Email",]) ||
+    readValue(customer, ["fullName", "name", "email", "FullName", "Name", "Email"]) || "Customer");
 }
 
 export default function AdminOrders() {
@@ -126,24 +102,13 @@ export default function AdminOrders() {
 
       setOrders(list);
 
-      const count = readValue(
-        response,
-        ["totalCount", "TotalCount", "totalRecords", "TotalRecords"],
-        readValue(response?.data, [
-          "totalCount",
-          "TotalCount",
-          "totalRecords",
-          "TotalRecords",
-        ], null)
+      const count = readValue(response, ["totalCount", "TotalCount", "totalRecords", "TotalRecords"],
+        readValue(response?.data, ["totalCount","TotalCount","totalRecords","TotalRecords",], null)
       );
 
       setTotalCount(count === null ? null : Number(count));
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        err.response?.data?.title ||
-        "Failed to load orders. Check the API endpoint and your admin access."
-      );
+      setError( err.response?.data?.message ||  err.response?.data?.title || "Failed to load orders. Check the API endpoint and your admin access.");
     } finally {
       setLoading(false);
     }
@@ -168,13 +133,8 @@ export default function AdminOrders() {
     }
 
     const previousStatus = getOrderStatus(order);
-
     if (newStatus === previousStatus) return;
-
-    if (
-      newStatus === "Cancelled" &&
-      !window.confirm(`Cancel order ${orderId}?`)
-    ) {
+    if ( newStatus === "Cancelled" && !window.confirm(`Cancel order ${orderId}?`)) {
       return;
     }
 
@@ -188,10 +148,7 @@ export default function AdminOrders() {
       setNotice(`Order ${orderId} updated successfully.`);
       await loadOrders();
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        "Could not update order status. Verify the request DTO in Swagger."
-      );
+      setError(err.response?.data?.message || "Could not update order status. Verify the request DTO in Swagger.");
     }
   };
 
@@ -204,11 +161,7 @@ export default function AdminOrders() {
 
     if (newStatus === getPaymentStatus(order)) return;
 
-    if (
-      !window.confirm(
-        `Change payment status for order ${orderId} to ${newStatus}?`
-      )
-    ) {
+    if (!window.confirm(`Change payment status for order ${orderId} to ${newStatus}?`)) {
       return;
     }
 
@@ -217,10 +170,7 @@ export default function AdminOrders() {
       setNotice(`Payment status for order ${orderId} updated.`);
       await loadOrders();
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-        "Could not update payment status. Check the API request schema."
-      );
+      setError(err.response?.data?.message ||"Could not update payment status. Check the API request schema.");
     }
   };
 
@@ -235,11 +185,7 @@ export default function AdminOrders() {
   });
 
   const canGoBack = pageNumber > 1;
-  const canGoForward =
-    totalCount !== null
-      ? pageNumber * pageSize < totalCount
-      : orders.length === pageSize;
-
+  const canGoForward = totalCount !== null ? pageNumber * pageSize < totalCount : orders.length === pageSize;
   return (
     <main className="admin-orders-page">
       <header className="admin-orders-header">
@@ -248,13 +194,7 @@ export default function AdminOrders() {
           <h1>Order Management</h1>
           <p>Review customer orders and manage their statuses.</p>
         </div>
-
-        <button
-          className="admin-button admin-button-secondary"
-          onClick={loadOrders}
-          disabled={loading}
-          type="button"
-        >
+        <button className="admin-button admin-button-secondary" onClick={loadOrders} disabled={loading} type="button">
           {loading ? "Refreshing..." : "Refresh orders"}
         </button>
       </header>
@@ -274,29 +214,16 @@ export default function AdminOrders() {
       <form className="admin-order-filters" onSubmit={handleFilterSubmit}>
         <label>
           Order status
-          <select
-            value={status}
-            onChange={(event) => {
-              setStatus(event.target.value);
-              setPageNumber(1);
-            }}
-          >
+          <select value={status} onChange={(event) => {setStatus(event.target.value); setPageNumber(1);}}>
             <option value="">All statuses</option>
             {ORDER_STATUSES.map((item) => (
               <option key={item} value={item}>{item}</option>
             ))}
           </select>
         </label>
-
         <label>
           Payment status
-          <select
-            value={paymentStatus}
-            onChange={(event) => {
-              setPaymentStatus(event.target.value);
-              setPageNumber(1);
-            }}
-          >
+          <select value={paymentStatus} onChange={(event) => {setPaymentStatus(event.target.value); setPageNumber(1);}}>
             <option value="">All payments</option>
             {PAYMENT_STATUSES.map((item) => (
               <option key={item} value={item}>{item}</option>
@@ -306,14 +233,7 @@ export default function AdminOrders() {
 
         <label>
           From date
-          <input
-            type="date"
-            value={fromDate}
-            onChange={(event) => {
-              setFromDate(event.target.value);
-              setPageNumber(1);
-            }}
-          />
+          <input type="date" value={fromDate} onChange={(event) => {setFromDate(event.target.value); setPageNumber(1);}} />
         </label>
 
         <label>
@@ -397,15 +317,7 @@ export default function AdminOrders() {
                   <td>{getCustomer(order)}</td>
 
                   <td>
-                    {formatDate(
-                      readValue(order, [
-                        "createdOn",
-                        "orderDate",
-                        "createdAt",
-                        "CreatedOn",
-                        "OrderDate",
-                      ])
-                    )}
+                    {formatDate(readValue(order, ["createdDate","orderDate","createdAt","CreatedOn","OrderDate",]))}S
                   </td>
 
                   <td>{formatCurrency(getTotal(order))}</td>
@@ -524,14 +436,7 @@ export default function AdminOrders() {
               <dt>Order date</dt>
               <dd>
                 {formatDate(
-                  readValue(selectedOrder, [
-                    "createdOn",
-                    "orderDate",
-                    "createdAt",
-                    "CreatedOn",
-                    "OrderDate",
-                  ])
-                )}
+                  readValue(selectedOrder, ["createdDate","orderDate","createdAt","CreatedOn","OrderDate",]))}
               </dd>
 
               <dt>Total</dt>
