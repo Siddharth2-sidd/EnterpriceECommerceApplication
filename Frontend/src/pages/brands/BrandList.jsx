@@ -6,8 +6,8 @@ const BrandList = () => {
   const [brands, setBrands] = useState([]);
   const [search, setSearch] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
-  const [pageSize] = useState(8);
-  const [totalPages, setTotalPages] = useState(1);
+  // const [pageSize] = useState(8);
+  // const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

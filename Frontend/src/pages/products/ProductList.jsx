@@ -14,14 +14,15 @@ const ProductList = () => {
   const minPrice = searchParams.get("minPrice") || "";
   const maxPrice = searchParams.get("maxPrice") || "";
   const isFeatured = searchParams.get("isFeatured") === "true";
-  const pageNumber = Math.max(1, Number(searchParams.get("pageNumber")) || 1);
-
+  const pageNumber  = searchParams.get("pageNumber" || 1);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [totalPages, setTotalPages] = useState(1);
+ 
+
 
   // Form state
   const [searchInput, setSearchInput] = useState(search);
@@ -51,15 +52,20 @@ const ProductList = () => {
   }, []);
 
   // Load products whenever URL filters change
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        setLoading(true);
-        setError("");
+useEffect(() => {
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
+      const pageSize = 12;
+      let currentPage = 1;
+      let allProducts = [];
+
+      while (true) {
         const params = {
-          PageNumber: pageNumber,
-          PageSize: 12,
+          PageNumber: currentPage,
+          PageSize: pageSize,
           SortBy: sortBy,
           Descending: descending,
         };
@@ -72,27 +78,36 @@ const ProductList = () => {
         if (isFeatured) params.IsFeatured = true;
 
         const response = await getProducts(params);
-        console.log("Filtered product response:", response);
-        const items = response.items || response.data || response.products || response;
-        setProducts(Array.isArray(items) ? items : []);
 
-        if (response.totalPages) {
-          setTotalPages(response.totalPages);
-        } else if (response.totalCount) {
-          setTotalPages(Math.ceil(response.totalCount / 12));
-        } else {
-          setTotalPages(1);
+        console.log(`Page ${currentPage} response:`, response);
+
+        const items = Array.isArray(response)? response: response.items ??response.data?.items ?? response.data ?? response.products ?? [];
+        if (!Array.isArray(items) || items.length === 0) {
+          break;
         }
-      } catch (error) {
-        console.error("Product loading error:", error);
-        setError(error.response?.data?.message || "Failed to load products.");
-      } finally {
-        setLoading(false);
-      }
-    };
+        allProducts.push(...items);
 
-    loadProducts();
-  }, [search,categoryId,brandId,minPrice,maxPrice,isFeatured,pageNumber,sortBy,descending,]);
+        // Last page contains fewer products than the requested page size.
+        if (items.length < pageSize) {
+          break;
+        }
+
+        currentPage++;
+      }
+
+      setProducts(allProducts);
+      setTotalPages(1); // All fetched products are displayed together.
+    } catch (error) {
+      console.error("Product loading error:", error);
+      setError(error.response?.data?.message || "Failed to load products.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadProducts();
+}, [search,categoryId, brandId, minPrice, maxPrice, isFeatured, sortBy, descending,]);
+
 
   // Apply filters to URL
   const handleApplyFilters = (e) => {
@@ -239,18 +254,18 @@ const ProductList = () => {
         <>
           <div className="product-results-header">
             <h2>Products</h2>
-            <span> Page {pageNumber} of {totalPages} </span>
+            <span>Total products: {products.length}</span>
           </div>
 
           <div className="product-grid">
             {products.map((product) => (<ProductCard key={product.id} product={product}/>))}
           </div>
 
-          <div className="pagination">
+          {/* <div className="pagination">
             <button  disabled={pageNumber <= 1} onClick={() => handlePageChange(pageNumber - 1)}> Previous </button>
             <span> Page {pageNumber} of {totalPages} </span>
             <button disabled={pageNumber >= totalPages} onClick={() =>handlePageChange(pageNumber + 1)}> Next </button>
-          </div>
+          </div> */}
         </>
       )}
     </div>
