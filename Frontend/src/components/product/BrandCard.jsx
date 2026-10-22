@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom" ;
-import getProducts from "../../api/productApi";
+// import getProducts from "../../api/productApi";
 
 const BrandCard = ({brand}) =>{
     return(
