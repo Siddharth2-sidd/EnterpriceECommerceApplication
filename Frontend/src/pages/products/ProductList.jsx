@@ -249,7 +249,7 @@ useEffect(() => {
       {!loading && !error && products.length === 0 && (
         <div className="empty-message"> No products found matching your filters. </div>
       )}
-
+.
       {!loading && products.length > 0 && (
         <>
           <div className="product-results-header">

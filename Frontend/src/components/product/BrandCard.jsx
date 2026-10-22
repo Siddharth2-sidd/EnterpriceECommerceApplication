@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom" ;
+import getProducts from "../../api/productApi";
 
 const BrandCard = ({brand}) =>{
     return(
@@ -8,7 +9,7 @@ const BrandCard = ({brand}) =>{
                 {brand.description && (
                     <p>{brand.description}</p>
                 )}
-                <Link to={`\products?brandId=${brand.id}`} className="brand-button"> View Products </Link>
+                <Link to={`/products?brandId=${brand.id}`} className="brand-button"> View Products </Link>          
             </div>
         </div>
     );
