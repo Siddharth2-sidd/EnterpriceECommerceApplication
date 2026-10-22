@@ -10,7 +10,7 @@ const CategoryCard = ({category}) =>{
             <div className="category-context">
                 <h3>{category.name}</h3>
                 {category.description && (<p>{category.description}</p>)}
-                <Link to={`/products?categoryid=${category.id}`} className="category-button">
+                <Link to={`/products?categoryId=${category.id}`} className="category-button">
                     View Products
                 </Link>
             </div> 
