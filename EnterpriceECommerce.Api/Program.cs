@@ -80,7 +80,12 @@ namespace EnterpriceECommerce.Api
             {
                 options.AddPolicy("ReactPolicy", policy =>
                 {
-                    policy.WithOrigins("https://witty-wave-0af8cbd00.2.azurestaticapps.net/").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    policy
+                        .WithOrigins(
+                            "https://witty-wave-0af8cbd00.2.azurestaticapps.net"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
@@ -95,6 +100,7 @@ namespace EnterpriceECommerce.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseCors("ReactPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
