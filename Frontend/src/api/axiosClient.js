@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseURL = import.meta.env.VITE_API_URL;
+// const baseURL = import.meta.env.VITE_API_URL;
+const baseURL = "https://ecommerce-api-12-achua4h0cpb2ecdu.centralindia-01.azurewebsites.net/api";
 const axiosClient = axios.create({
   baseURL,
   headers: {
