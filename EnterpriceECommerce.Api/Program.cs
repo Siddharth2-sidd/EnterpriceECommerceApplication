@@ -96,7 +96,7 @@ namespace EnterpriceECommerce.Api
 
             app.UseHttpsRedirection();
             app.UseCors("ReactPolicy");
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<ExceptionMiddleware>();
